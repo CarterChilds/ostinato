@@ -8,9 +8,13 @@
 }
 
 .note:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    opacity: 0.2;
 }
 
-.active {
+.selected {
     background-color: rgba(44, 255, 241);
+}
+
+#active-row {
+    opacity: 0.5;
 }

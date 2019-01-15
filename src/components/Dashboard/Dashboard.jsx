@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import LoopIcon from '../LoopIcon/LoopIcon'
-import AddButton from '../AddButton/AddButton'
+import LoopIcon from './LoopIcon/LoopIcon'
+import AddButton from './AddButton/AddButton'
 
 export default class Dashboard extends Component {
     constructor(props){ 
