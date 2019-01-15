@@ -1,0 +1,34 @@
+.loop-title-bar {
+    margin-bottom: 15px;
+
+}
+
+.loop-title-bar > input {
+    background: none;
+    border: none;
+    border-bottom: 3px solid rgba(204, 204, 204);
+    font-family: 'Inconsolata', monospace;
+    font-size: 2em;
+    color: rgba(204, 204, 204);
+    transition: .2s;
+    padding: 0 5px;
+}
+
+.loop-title-bar > input:focus {
+    outline: none;
+    color: rgba(225, 255, 44);
+    border-bottom: 3px solid rgba(225, 255, 44);
+    background-color: #cccccc;
+}
+
+.loop-title-bar > input:hover {
+    color: rgba(225, 255, 44);
+    border-bottom: 3px solid rgba(225, 255, 44);
+    background-color: rgba(0, 0, 0, 0.2)
+}
+
+.loop-settings-bar {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}

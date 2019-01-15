@@ -1,0 +1,16 @@
+.note {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    margin: 1px 3px;
+    background: rgba(235, 235, 235);
+    transition: .1s;
+}
+
+.note:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.active {
+    background-color: rgba(44, 255, 241);
+}
