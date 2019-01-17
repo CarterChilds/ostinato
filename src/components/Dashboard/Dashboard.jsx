@@ -15,20 +15,18 @@ class Dashboard extends Component {
     }
 
     async componentDidMount() {
-        if (this.props.id) {
             await this.getUserLoops()
-        }
     }
 
     async getUserLoops() {
-        const loops = await axios.get(`/api/loops/${this.props.id}`)
+        const loops = await axios.get(`/api/loops`)
         this.setState({ loops: loops.data })
     }
 
     newLoop() {
         const {id:user_id} = this.props
         console.log(user_id)
-        axios.post('/api/loop', {user_id})
+        axios.post('/api/loop')
             .then(res => {
                 this.props.history.push(`/loop/${res.data.loop_id}`)
             })
@@ -58,8 +56,8 @@ class Dashboard extends Component {
 }
 
 function mapStateToProps(store) {
-    const { id, username } = store;
-    return { id, username }
+    const { username } = store;
+    return { username }
 }
 
 export default connect(mapStateToProps)(Dashboard)

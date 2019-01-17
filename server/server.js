@@ -19,6 +19,8 @@ app.use(session({
 // Endpoints for Authentication
 app.post('/auth/register', authCtrl.register)
 app.post('/auth/login', authCtrl.login)
+app.post('/auth/logout', authCtrl.logout)
+app.get('/auth/me', authCtrl.loggedIn)
 
 // Endpoints for Editor View
 app.get('/api/loop/:id', controller.getLoop)
@@ -27,7 +29,7 @@ app.post('/api/loop', controller.newLoop)
 app.delete('/api/loop/:id', controller.deleteLoop)
 
 // Endpoints for Dashboard View
-app.get('/api/loops/:id', controller.getLoops)
+app.get('/api/loops', controller.getLoops)
 
 massive(CONNECTION_STRING).then(db => {
     app.set('db', db)

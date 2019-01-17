@@ -43,7 +43,7 @@ const filter = new Tone.Filter({
 
 const delay = new Tone.PingPongDelay(0.75, 0.7)
 delay.wet.value = 0.5;
-delay.toMaster()  // I will attach this functionality to a button down below later
+// delay.toMaster()  // I will attach this functionality to a button down below later
 
 // attach effects to the synth
 noteEngines.forEach(synth => {

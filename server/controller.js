@@ -19,9 +19,8 @@ module.exports = {
     },
     newLoop: async (req, res) => {
         const db = req.app.get('db')
-        const {user_id} = req.body
         const newID = await db.new_loop()
-        db.join_user_and_loop({user_id, loop_id: newID[0].loop_id})
+        db.join_user_and_loop({user_id: req.session.user.id, loop_id: newID[0].loop_id})
             .then(result => {
                 res.status(200).send(result[0])
             })
@@ -42,7 +41,7 @@ module.exports = {
     },
     getLoops: (req, res) => {
         const db = req.app.get('db')
-        const {id} = req.params
+        const {id} = req.session.user
         db.get_user_loops({id})
             .then(result => {
                 res.status(200).send(result)
