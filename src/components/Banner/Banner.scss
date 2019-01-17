@@ -1,0 +1,26 @@
+$font: 'Inconsolata', monospace;
+
+.banner {
+    height: 30vw;
+    min-height: 400px;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
+    // background-color: rgba(0,0,0,.5);
+    // background-image: linear-gradient(120deg, rgba(45, 255, 241, .5), rgba(226, 255, 51, .5));
+    width: 100vw;
+    margin-top: -20px;
+    font-family: $font;
+    .main-overlay {
+        background: rgba(45, 255, 241, .8);
+        padding: 30px;
+        position: relative;
+        bottom: 270px;
+        h2 {
+            font-family: 'Didact Gothic', sans-serif;
+        }
+    }
+}

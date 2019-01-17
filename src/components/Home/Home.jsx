@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Banner from '../Banner/Banner'
 import Featured from '../Featured/Featured'
+import SideMenu from '../SideMenu/SideMenu';
 
 export default class Home extends Component {
     constructor(props){ 
@@ -15,6 +16,7 @@ export default class Home extends Component {
             <div>
                 <Banner />
                 <Featured />
+                <SideMenu />
             </div>
         )
     }

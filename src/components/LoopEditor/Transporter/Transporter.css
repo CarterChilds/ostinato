@@ -1,7 +1,7 @@
 .play-button {
     height: 100px;
     width: 100px;
-    background: rgba(235, 235, 235);
+    background: rgb(235, 235, 235);
     border-radius: 100px;
     display: flex;
     justify-content: center;
@@ -9,7 +9,7 @@
 }
 
 .play-button:hover {
-    background: rgba(45, 255, 181)
+    background: rgb(45, 255, 181)
 }
 
 .play-button > .triangle {

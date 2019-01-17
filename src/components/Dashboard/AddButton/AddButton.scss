@@ -9,7 +9,10 @@ $square: 120px;
     margin: 20px 5px;
     i:hover {
         cursor: pointer;
-        color: rgba(0, 0, 0, .4);
+        color: #ADACA9;
+        background-color: rgb(225, 255, 44);
+        border: 2px solid rgb(225, 255, 44);
+        border-radius: 100px;
         transition: .3s;
     }
 }

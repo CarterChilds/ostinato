@@ -34,15 +34,20 @@ module.exports = {
         req.session.user = {id: account[0].user_id, email: account[0].email, profilePic: account[0].profile_pic, username: account[0].username, name: account[0].name}
         res.status(200).send({message: 'Logged in', userData: req.session.user, loggedIn: true})
     },
-    loggedIn: (req, res) => {
-        const db = req.app.get('db')
-        db.logged_in({id: req.session.user.id})
-            .then(userInfo => {
-                res.status(200).send(userInfo[0])
-            })
-            .catch(err => {
-                res.status(200).send({message: 'Please log in or register for a new account'})
-            })
+    loggedIn: (req, res, next) => {
+        if (req.session.user) {
+            res.status(200).send(req.session.user)
+        } else {
+            res.status(401).send('Please log in or create an account')
+        }
+        // const db = req.app.get('db')
+        // db.logged_in({id: req.session.user.id})
+        //     .then(userInfo => {
+        //         res.status(200).send(userInfo[0])
+        //     })
+        //     .catch(err => {
+        //         res.status(200).send({message: 'Please log in or register for a new account'})
+        //     })
     },
     logout: (req, res) => {
         req.session.destroy()

@@ -1,0 +1,57 @@
+$font: 'Inconsolata', monospace;
+$colorList: rgb(45, 255, 241), rgb(45, 255, 181), rgb(44, 255, 96), rgb(92, 255, 44), rgb(225, 255, 45);
+
+.side-menu {
+    background-color: black;
+    color: white;
+    height: 100vh;
+    width: 20vw;
+    max-width: 220px;
+    min-width: 130px;
+    position: absolute;
+    top: -100vh;
+    right: 0;
+    padding: 50px 10px;
+    display: flex;
+    flex-direction: column;
+    transition: .3s;
+    a {
+        font-family: $font;
+        font-size: 1.5em;
+        padding: 20px 0;
+        transition: .2s;
+        text-decoration: none;
+        color: white;
+        &:hover {
+            @for $i from 1 through 5 {
+                &:nth-of-type(5n+#{$i}) {
+                  color: nth($colorList, $i);
+                }
+              };
+            cursor: pointer;
+        }
+    }
+    .profile-pic {
+        height: 90px;
+        width: 90px;
+        background: white;
+        align-self: flex-end;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+    span {
+        font-family: $font;
+        font-size: 1.2em;
+        align-self: flex-end;
+    }
+}
+.slide-in {
+    top: 0;
+}

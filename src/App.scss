@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700');
-
+@import url('https://fonts.googleapis.com/css?family=Didact+Gothic|Inconsolata:400,700');
 // example of variable
 $backgroundColor: rgb(255, 254, 250);
 $font: 'Inconsolata', monospace;
@@ -57,4 +56,5 @@ table {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 70px;
 }

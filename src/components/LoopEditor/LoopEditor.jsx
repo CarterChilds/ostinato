@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import './LoopEditor.css'
+import './LoopEditor.scss'
 import Tone from 'tone'
 import axios from 'axios';
+import { connect } from 'react-redux'
+import { getUser } from '../../ducks/reducer'
 
 import SequenceRow from './SequenceRow/SequenceRow'
 // import KeySelector from './KeySelector/KeySelector'
@@ -52,7 +54,7 @@ noteEngines.forEach(synth => {
 
 // END TONE.JS SETUP ***************************************
 
-export default class LoopEditor extends Component {
+class LoopEditor extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -73,6 +75,14 @@ export default class LoopEditor extends Component {
     }
 
     async componentDidMount() {
+        try {
+            const loginData = await axios.get('/auth/me')
+            this.props.getUser(loginData.data)
+        } catch (e) {
+            console.log(e)
+            this.props.history.push('/')
+        }
+
         const { id } = this.props.match.params
         try {
             const loopData = await axios.get(`/api/loop/${id}`)
@@ -125,6 +135,7 @@ export default class LoopEditor extends Component {
     }
 
     initializeSoundEngine() {
+        // Create moving barline
         const repeatId = Tone.Transport.scheduleRepeat(() => {
             if (Number.isInteger(this.state.activeNote) && this.state.activeNote !== 15) {
                 this.setState({ activeNote: this.state.activeNote + 1 })
@@ -167,10 +178,10 @@ export default class LoopEditor extends Component {
     }
 
     async deleteLoop() {
-        const {id} = this.props.match.params
+        const { id } = this.props.match.params
         const res = await axios.delete(`/api/loop/${id}`)
         this.componentWillUnmount()
-        await alert (res.data.message)
+        await alert(res.data.message)
         this.props.history.push('/dashboard')
     }
 
@@ -253,18 +264,20 @@ export default class LoopEditor extends Component {
                         value={this.state.title}
                         onChange={e => this.handleChange('title', e)}
                     />
-                    <i
-                        className='fas fa-save fa-2x'
-                        onClick={() => this.saveLoop()}
-                    />
-                    <i
-                        className='fas fa-trash fa-2x'
-                        onClick={() => this.deleteLoop()}
-                    />
-                    <i
-                        className='fas fa-undo fa-2x'
-                        onClick={() => this.resetLoop()}
-                    />
+                    <div>
+                        <i
+                            className='fas fa-save fa-2x'
+                            onClick={() => this.saveLoop()}
+                        />
+                        <i
+                            className='fas fa-trash fa-2x'
+                            onClick={() => this.deleteLoop()}
+                        />
+                        <i
+                            className='fas fa-undo fa-2x'
+                            onClick={() => this.resetLoop()}
+                        />
+                    </div>
                 </div>
                 <div className='sequencer'>
                     {this.state.rowData.map((row, index) => (
@@ -301,3 +314,5 @@ export default class LoopEditor extends Component {
         )
     }
 }
+
+export default connect(null, { getUser })(LoopEditor)

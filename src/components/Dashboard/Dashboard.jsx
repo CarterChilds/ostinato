@@ -3,6 +3,7 @@ import LoopIcon from './LoopIcon/LoopIcon'
 import AddButton from './AddButton/AddButton'
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { getUser } from '../../ducks/reducer'
 import './Dashboard.scss'
 
 class Dashboard extends Component {
@@ -15,7 +16,14 @@ class Dashboard extends Component {
     }
 
     async componentDidMount() {
-            await this.getUserLoops()
+        try {
+            const loginData = await axios.get('/auth/me')
+            this.props.getUser(loginData.data)
+            this.getUserLoops()
+        } catch (e) {
+            console.log(e)
+            this.props.history.push('/')
+        }
     }
 
     async getUserLoops() {
@@ -24,8 +32,8 @@ class Dashboard extends Component {
     }
 
     newLoop() {
-        const {id:user_id} = this.props
-        console.log(user_id)
+        // const { id: user_id } = this.props
+        // console.log(user_id)
         axios.post('/api/loop')
             .then(res => {
                 this.props.history.push(`/loop/${res.data.loop_id}`)
@@ -60,4 +68,4 @@ function mapStateToProps(store) {
     return { username }
 }
 
-export default connect(mapStateToProps)(Dashboard)
+export default connect(mapStateToProps, {getUser})(Dashboard)

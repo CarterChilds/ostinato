@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { getUser } from '../../ducks/reducer'
 import Login from './Login/Login'
 import Register from './Register/Register'
+import SideMenu from '../SideMenu/SideMenu'
 import axios from 'axios';
 
 class Header extends Component {
@@ -13,9 +14,12 @@ class Header extends Component {
         this.state = {
             showLogin: false,
             showRegister: false,
+            showSideMenu: false,
             loggedIn: false
         }
         this.toggle = this.toggle.bind(this)
+        this.logout = this.logout.bind(this)
+        this.newLoop = this.newLoop.bind(this)
     }
 
     async componentDidMount() {
@@ -28,11 +32,15 @@ class Header extends Component {
             this.props.getUser(loginData.data)
         } catch(e) {
             console.log(e)
-            this.navigateHome()
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.showSideMenu !== this.state.showSideMenu) {
+            this.setState({
+                showSideMenu: this.state.showSideMenu
+            })
+        }
         if (prevProps.username !== this.props.username) {
             this.setState({
                 loggedIn: true
@@ -60,11 +68,23 @@ class Header extends Component {
         })
     }
 
+    newLoop() {
+        // const { id: user_id } = this.props
+        // console.log(user_id)
+        axios.post('/api/loop')
+            .then(res => {
+                this.props.history.push(`/loop/${res.data.loop_id}`)
+            })
+    }
+
     render() {
         // console.log(this.props)
         return (
             <div className='header'>
-                <Link to='/'>
+                <Link 
+                    onClick={() => this.setState({showSideMenu: false})}
+                    to='/'
+                >
                     <div className="logo">
                         <h1>{`OSTINATO`}</h1>
                     </div>
@@ -76,7 +96,7 @@ class Header extends Component {
                             className="header-button"
                             onClick={() => {
                                 this.toggle('showRegister')
-                                this.navigateHome()
+                                // this.navigateHome()
                             }}
                         >
                             <h3>
@@ -87,7 +107,7 @@ class Header extends Component {
                             className="header-button"
                             onClick={() => {
                                 this.toggle('showLogin')
-                                this.navigateHome()
+                                // this.navigateHome()
                             }}
                         >
                             <h3>
@@ -100,12 +120,11 @@ class Header extends Component {
                             <div
                                 className="header-button"
                                 onClick={() => {
-                                    this.logout()
-                                    this.navigateHome()
+                                    this.toggle('showSideMenu')
                                 }}
                             >
                                 <h3>
-                                    Logout
+                                    Menu
                             </h3>
                             </div>
                         </div>
@@ -118,6 +137,12 @@ class Header extends Component {
                 <Login
                     display={this.state.showLogin}
                     toggleFn={this.toggle}
+                />
+                <SideMenu 
+                    display={this.state.showSideMenu}
+                    toggleFn={this.toggle}
+                    logoutFn={this.logout}
+                    newLoopFn={this.newLoop}
                 />
             </div>
         )
