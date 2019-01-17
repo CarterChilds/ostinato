@@ -2,7 +2,9 @@
     margin-bottom: 15px;
 
 }
-
+.loop-title-bar > i {
+    margin: 0 3px;
+}
 .loop-title-bar > input {
     background: none;
     border: none;
@@ -44,4 +46,9 @@
     margin-top: 15px;
     display: flex;
     justify-content: center;
+}
+.tempo-info > span, .volume-info > span {
+    font-family: 'Inconsolata', monospace;
+    display: flex;
+    justify-content: space-between;
 }

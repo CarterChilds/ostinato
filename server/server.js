@@ -16,10 +16,18 @@ app.use(session({
     resave: false
 }))
 
+// Endpoints for Authentication
+app.post('/auth/register', authCtrl.register)
+app.post('/auth/login', authCtrl.login)
+
 // Endpoints for Editor View
 app.get('/api/loop/:id', controller.getLoop)
 app.put('/api/loop/:id', controller.saveLoop)
+app.post('/api/loop', controller.newLoop)
+app.delete('/api/loop/:id', controller.deleteLoop)
 
+// Endpoints for Dashboard View
+app.get('/api/loops/:id', controller.getLoops)
 
 massive(CONNECTION_STRING).then(db => {
     app.set('db', db)

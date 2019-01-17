@@ -14,7 +14,41 @@ module.exports = {
                 res.status(200).send({message: 'Loop saved!'})
             })
             .catch(err => {
-                console.log(err.message)
+                res.status(500).send(err.message)
+            })
+    },
+    newLoop: async (req, res) => {
+        const db = req.app.get('db')
+        const {user_id} = req.body
+        const newID = await db.new_loop()
+        db.join_user_and_loop({user_id, loop_id: newID[0].loop_id})
+            .then(result => {
+                res.status(200).send(result[0])
+            })
+            .catch(err => {
+                res.status(500).send(err.message)
+            })
+    },
+    deleteLoop: (req, res) => {
+        const db = req.app.get('db')
+        const {id} = req.params
+        db.delete_loop({loop_id: id})
+            .then(() => {
+                res.status(200).send({message: 'Loop deleted'})
+            })
+            .catch(err => {
+                res.status(500).send(err.message)
+            })
+    },
+    getLoops: (req, res) => {
+        const db = req.app.get('db')
+        const {id} = req.params
+        db.get_user_loops({id})
+            .then(result => {
+                res.status(200).send(result)
+            })
+            .catch(err => {
+                res.status(500).send(err.message)
             })
     }
 }

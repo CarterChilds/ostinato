@@ -1,0 +1,52 @@
+$font: 'Inconsolata', monospace;
+
+.header {
+    width: 100vw;
+    background: black;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+.logo {
+    font-family: $font;
+    font-size: 2rem;
+    display: inline-block;
+    padding: 1px 30px;
+    transition: .5s;
+    position: relative;
+    bottom: 2px;
+    background: white;
+    opacity: .85;
+    h1 {
+        color: black;
+    }
+}
+.logo:hover {
+    opacity: 1;
+}
+.nav {
+    position: absolute;
+    right: 10px;
+    display: flex;
+}
+.header-button {
+    color: white;
+    font-family: $font;
+    padding: 3px 15px;
+    width: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 1px;
+    transition: .2s;
+    h3 {
+        font-weight: 700;
+    }
+}
+.header-button:hover {
+    color: rgb(171, 255, 44);
+    cursor: pointer;
+}

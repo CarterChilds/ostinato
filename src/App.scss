@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700');
 
+// example of variable
+$backgroundColor: rgb(255, 254, 250);
+$font: 'Inconsolata', monospace;
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -27,6 +31,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: $backgroundColor;
 }
 ol, ul {
 	list-style: none;
@@ -45,8 +50,11 @@ table {
 }
 * {
 	box-sizing: border-box;
+	font-family: 'Inconsolata', monospace;
 }
 
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

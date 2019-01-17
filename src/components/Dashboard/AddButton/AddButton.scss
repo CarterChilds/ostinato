@@ -1,0 +1,15 @@
+$square: 120px;
+
+.add-container {
+    height: $square;
+    width: $square;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 5px;
+    i:hover {
+        cursor: pointer;
+        color: rgba(0, 0, 0, .4);
+        transition: .3s;
+    }
+}

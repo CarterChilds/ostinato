@@ -1,0 +1,15 @@
+$font: 'Inconsolata', monospace;
+
+.dashboard {
+    display: flex;
+    width: 70vw;
+    max-width: 800px;
+    justify-content: flex-start;
+    border: 2px solid;
+    padding: 0 15px;
+}
+
+div > h2 {
+    font-family: $font;
+    font-size: 2em;
+}
