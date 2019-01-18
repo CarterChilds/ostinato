@@ -4,7 +4,7 @@ const massive = require('massive')
 const session = require('express-session')
 const {SERVER_PORT, CONNECTION_STRING, SECRET} = process.env
 
-const controller = require('./controller')
+const loopCtrl = require('./loopController')
 const authCtrl = require('./authController')
 
 const app = express()
@@ -21,15 +21,16 @@ app.post('/auth/register', authCtrl.register)
 app.post('/auth/login', authCtrl.login)
 app.post('/auth/logout', authCtrl.logout)
 app.get('/auth/me', authCtrl.loggedIn)
+app.put('/auth/account', authCtrl.updateAccount)
 
 // Endpoints for Editor View
-app.get('/api/loop/:id', controller.getLoop)
-app.put('/api/loop/:id', controller.saveLoop)
-app.post('/api/loop', controller.newLoop)
-app.delete('/api/loop/:id', controller.deleteLoop)
+app.get('/api/loop/:id', loopCtrl.getLoop)
+app.put('/api/loop/:id', loopCtrl.saveLoop)
+app.post('/api/loop', loopCtrl.newLoop)
+app.delete('/api/loop/:id', loopCtrl.deleteLoop)
 
 // Endpoints for Dashboard View
-app.get('/api/loops', controller.getLoops)
+app.get('/api/loops', loopCtrl.getLoops)
 
 massive(CONNECTION_STRING).then(db => {
     app.set('db', db)

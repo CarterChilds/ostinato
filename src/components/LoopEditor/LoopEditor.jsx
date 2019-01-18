@@ -14,17 +14,23 @@ import VolumeSlider from './VolumeSlider/VolumeSlider';
 // SETUP FOR TONEJS ****************************************
 // create the synth
 let noteEngines = []
+// for (let i = 0; i < 8; i++) {
+//     noteEngines.push(new Tone.Synth({
+//         oscillator: {
+//             type: 'square'
+//         },
+//         envelope: {
+//             attack: 0.005,
+//             decay: 0.1,
+//             sustain: 0.3,
+//             release: 1
+//         }
+//     }))
+// }
 for (let i = 0; i < 8; i++) {
-    noteEngines.push(new Tone.Synth({
-        oscillator: {
-            type: 'square'
-        },
-        envelope: {
-            attack: 0.005,
-            decay: 0.1,
-            sustain: 0.3,
-            release: 1
-        }
+    noteEngines.push(new Tone.Sampler({
+        "C3": 'https://s3.us-east-2.amazonaws.com/ostinato-samples/rhodes/US_Rhodes_C3.wav',
+        "C4": 'https://s3.us-east-2.amazonaws.com/ostinato-samples/rhodes/US_Rhodes_C4.wav'
     }))
 }
 
@@ -43,7 +49,7 @@ const filter = new Tone.Filter({
     gain: 0
 })
 
-const delay = new Tone.PingPongDelay(0.75, 0.7)
+const delay = new Tone.PingPongDelay(0.2, 0.4)
 delay.wet.value = 0.5;
 // delay.toMaster()  // I will attach this functionality to a button down below later
 
@@ -66,7 +72,7 @@ class LoopEditor extends Component {
             scale: ['C4', 'B3', 'A3', 'G3', 'F3', 'E3', 'D3', 'C3'],
             activeNote: null,
             repeatId: null,
-            gain: -13
+            gain: -20
         }
         this.toggleNote = this.toggleNote.bind(this)
         this.playPause = this.playPause.bind(this)
@@ -191,7 +197,7 @@ class LoopEditor extends Component {
     }
 
     addNote(rowIndex, noteIndex) {
-        const noteID = Tone.Transport.schedule(() => noteEngines[rowIndex].triggerAttackRelease(this.state.scale[rowIndex], '16n'), `0:0:${noteIndex % 16}`)
+        const noteID = Tone.Transport.schedule(() => noteEngines[rowIndex].triggerAttackRelease(this.state.scale[rowIndex], '8t'), `0:0:${noteIndex % 16}`)
         let idArr = [...this.state.noteIDs]
         idArr[rowIndex][noteIndex] = noteID
         this.setState({
@@ -221,7 +227,7 @@ class LoopEditor extends Component {
             gain: evt.target.value
         })
         masterVolume.volume.value = this.state.gain
-        if (this.state.gain <= -20) {
+        if (this.state.gain <= -30) {
             masterVolume.mute = true
         } else {
             masterVolume.volume.mute = false
@@ -293,7 +299,7 @@ class LoopEditor extends Component {
                 </div>
                 <div className='loop-settings-bar'>
                     <div className='volume-info'>
-                        <span><span>{Number(this.state.gain) + 20}</span><span>Volume</span></span>
+                        <span><span>{Number(this.state.gain) + 30}</span><span>Volume</span></span>
                         <VolumeSlider
                             gain={this.state.gain}
                             changeFn={this.changeVolume}

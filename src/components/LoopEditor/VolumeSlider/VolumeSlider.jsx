@@ -8,8 +8,8 @@ export default function VolumeSlider(props) {
                 type='range'
                 id='volume-slider'
                 name='volume'
-                min='-20'
-                max='0'
+                min='-30'
+                max='-10'
                 value={props.gain}
                 step='1'
                 onChange={e => props.changeFn(e)}

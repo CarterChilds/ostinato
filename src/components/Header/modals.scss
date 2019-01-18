@@ -37,9 +37,9 @@ $font: 'Inconsolata', monospace;
         transform: skew(-20deg);
         margin-bottom: 15px;
         outline: none;
-    }
-    input:hover, input:active {
-        border: white solid 2px;
+        &:hover, &:focus {
+            border: white solid 2px;
+        }
     }
     p {
         margin: 5px 0;
@@ -52,6 +52,10 @@ $font: 'Inconsolata', monospace;
         font-size: 1rem;
         margin-top: 20px;
         cursor: pointer;
+        &:hover {
+            color: white;
+            border-color: white;
+        }
     }
     > p:nth-of-type(2) {
         cursor: pointer;

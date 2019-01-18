@@ -9,8 +9,8 @@ $colorList: rgb(45, 255, 241), rgb(45, 255, 181), rgb(44, 255, 96), rgb(92, 255,
     max-width: 220px;
     min-width: 130px;
     position: absolute;
-    top: -100vh;
-    right: 0;
+    top: -00vh;
+    right: -220px;
     padding: 50px 10px;
     display: flex;
     flex-direction: column;
@@ -53,5 +53,5 @@ $colorList: rgb(45, 255, 241), rgb(45, 255, 181), rgb(44, 255, 96), rgb(92, 255,
     }
 }
 .slide-in {
-    top: 0;
+    right: 0;
 }
