@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './LoopEditor.scss'
 import Tone from 'tone'
+import Swal from 'sweetalert2'
 import axios from 'axios';
 import { connect } from 'react-redux'
 import { getUser } from '../../ducks/reducer'
@@ -9,28 +10,32 @@ import SequenceRow from './SequenceRow/SequenceRow'
 // import KeySelector from './KeySelector/KeySelector'
 import Transporter from './Transporter/Transporter'
 import TempoSelector from './TempoSelector/TempoSelector'
-import VolumeSlider from './VolumeSlider/VolumeSlider';
+import VolumeSlider from './VolumeSlider/VolumeSlider'
+import SoundSelector from './SoundSelector/SoundSelector'
+
+import acousticGuitar from '../../samples/c3/acousticGuitar.wav'
+import brass from '../../samples/c3/brass.wav'
+import doubleBassPizz from '../../samples/c3/doubleBassPizz.wav'
+import rhodes from '../../samples/c3/rhodes.wav'
+import spaceKalimba from '../../samples/c3/spaceKalimba.wav'
+import tinnyPiano from '../../samples/c3/tinnyPiano.wav'
+import violins from '../../samples/c3/violins.wav'
 
 // SETUP FOR TONEJS ****************************************
 // create the synth
+console.log('synth created')
 let noteEngines = []
-// for (let i = 0; i < 8; i++) {
-//     noteEngines.push(new Tone.Synth({
-//         oscillator: {
-//             type: 'square'
-//         },
-//         envelope: {
-//             attack: 0.005,
-//             decay: 0.1,
-//             sustain: 0.3,
-//             release: 1
-//         }
-//     }))
-// }
 for (let i = 0; i < 8; i++) {
-    noteEngines.push(new Tone.Sampler({
-        "C3": 'https://s3.us-east-2.amazonaws.com/ostinato-samples/rhodes/US_Rhodes_C3.wav',
-        "C4": 'https://s3.us-east-2.amazonaws.com/ostinato-samples/rhodes/US_Rhodes_C4.wav'
+    noteEngines.push(new Tone.Synth({
+        oscillator: {
+            type: 'square'
+        },
+        envelope: {
+            attack: 0.02,
+            decay: 0.1,
+            sustain: 0.3,
+            release: 1
+        }
     }))
 }
 
@@ -78,9 +83,13 @@ class LoopEditor extends Component {
         this.playPause = this.playPause.bind(this)
         this.changeTempo = this.changeTempo.bind(this)
         this.changeVolume = this.changeVolume.bind(this)
+        this.changeSound = this.changeSound.bind(this)
     }
 
     async componentDidMount() {
+        this.componentWillUnmount()
+        Tone.context.suspend()
+        Tone.Transport.toggle()
         try {
             const loginData = await axios.get('/auth/me')
             this.props.getUser(loginData.data)
@@ -178,22 +187,78 @@ class LoopEditor extends Component {
             row.join('')
         ))
         const res = await axios.put(`/api/loop/${id}`, { title, tempo, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
-        this.componentWillUnmount()
-        await alert(res.data.message)
-        this.props.history.push('/dashboard')
+        Swal({
+            customClass: 'swal-custom',
+            customContainerClass: 'swal-container',
+            type: 'success',
+            title: 'Loop saved',
+            text: 'Do you want to keep working on this loop?',
+            showCancelButton: true,
+            cancelButtonText: 'Keep Working',
+            confirmButtonColor: 'rgb(44, 255, 96)',
+            confirmButtonText: 'Dashboard',
+            backdrop: `
+            linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+            `
+        }).then(result => {
+            if (result.value) {
+                this.componentWillUnmount()
+                this.props.history.push('/dashboard')
+            }
+        })
+        // await alert(res.data.message)
+        // this.props.history.push('/dashboard')
     }
 
     async deleteLoop() {
         const { id } = this.props.match.params
-        const res = await axios.delete(`/api/loop/${id}`)
-        this.componentWillUnmount()
-        await alert(res.data.message)
-        this.props.history.push('/dashboard')
+        await Swal({
+            customClass: 'swal-custom',
+            customContainerClass: 'swal-container',
+            backdrop: `
+            linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+            `,
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                axios.delete(`/api/loop/${id}`)
+                this.componentWillUnmount()
+                Swal({
+                    customClass: 'swal-custom',
+                    customContainerClass: 'swal-container',
+                    backdrop: `
+                    linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                    `,
+                    title: 'Deleted!',
+                    text: 'Your loop has been deleted',
+                    type: 'success'
+                })
+                this.props.history.push('/dashboard')
+            }
+        })
     }
 
     resetLoop() {
-        this.componentWillUnmount()
+        // this.componentWillUnmount()
         this.componentDidMount()
+        Swal({
+            customClass: 'swal-custom',
+            customContainerClass: 'swal-container',
+            backdrop: `
+            rgba(0,0,0,0)
+            `,
+            position: 'top-end',
+            type: 'success',
+            title: `Loop reset`,
+            showConfirmButton: false,
+            timer: 1000
+        })
     }
 
     addNote(rowIndex, noteIndex) {
@@ -253,12 +318,76 @@ class LoopEditor extends Component {
             Tone.context.resume()
             Tone.Transport.toggle()
             this.setState({
-                activeNote: 0
+                activeNote: null
             })
         } else {
             Tone.context.suspend()
             Tone.Transport.toggle()
         }
+    }
+
+    changeSound(sampleSelection) {
+        Tone.context.suspend()
+        let sampleToLoad = null
+        switch (sampleSelection) {
+            case 'acousticGuitar':
+                sampleToLoad = acousticGuitar
+                break;
+            case 'brass':
+                sampleToLoad = brass
+                break;
+            case 'doubleBassPizz':
+                sampleToLoad = doubleBassPizz
+                break;
+            case 'rhodes':
+                sampleToLoad = rhodes
+                break;
+            case 'spaceKalimba':
+                sampleToLoad = spaceKalimba
+                break;
+            case 'tinnyPiano':
+                sampleToLoad = tinnyPiano
+                break;
+            case 'violins':
+                sampleToLoad = violins
+                break;
+            default:
+                break;
+        }
+        if (sampleSelection !== 'synth') {
+            for (let i = 0; i < 8; i++) {
+                noteEngines[i] = (new Tone.Sampler({
+                    "C3": sampleToLoad,
+                }))
+            }
+        } else if (sampleSelection === 'synth') {
+            for (let i = 0; i < 8; i++) {
+                noteEngines[i] = (new Tone.Synth({
+                    oscillator: {
+                        type: 'square'
+                    },
+                    envelope: {
+                        attack: 0.01,
+                        decay: 0.1,
+                        sustain: 0.1,
+                        release: 1
+                    }
+                }))
+            }
+        }
+        noteEngines.forEach(instrument => {
+            instrument.chain(masterVolume, Tone.Master);
+        })
+        noteEngines.forEach(synth => {
+            synth.connect(filter).connect(delay).connect(gain)
+        })
+        Swal({
+            position: 'top-end',
+            type: 'success',
+            title: `${sampleSelection} loaded!`,
+            showConfirmButton: false,
+            timer: 1000
+        })
     }
 
     render() {
@@ -303,6 +432,9 @@ class LoopEditor extends Component {
                         <VolumeSlider
                             gain={this.state.gain}
                             changeFn={this.changeVolume}
+                        />
+                        <SoundSelector
+                            loadFn={this.changeSound}
                         />
                     </div>
                     <Transporter

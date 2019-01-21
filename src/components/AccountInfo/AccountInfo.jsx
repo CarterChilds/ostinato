@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import './AccountInfo.scss'
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 class AccountInfo extends Component {
     constructor(props) {
@@ -13,7 +14,8 @@ class AccountInfo extends Component {
             profilePic: '',
             currentPass: '',
             newPass1: '',
-            newPass2: ''
+            newPass2: '',
+            uploadPic: null
         }
     }
 
@@ -37,24 +39,113 @@ class AccountInfo extends Component {
         })
     }
 
-    updateAccount() {
-        try{
-            if (this.state.newPass1 === this.state.newPass2) {
-                const { email, profilePic, username, name, currentPass, newPass1 } = this.state
-                axios.put('/auth/account', { email, profilePic, username, name, currentPass, newPass1 })
-            } else {
-                console.log(`Passwords don't match`)
+    changePic = (evt) => {
+        if (evt.target.files[0]) {
+            this.setState({
+                profilePic: URL.createObjectURL(evt.target.files[0]),
+                uploadPic: evt.target.files[0]
+            })
+        } else {
+            this.setState({
+                profilePic: this.props.profilePic,
+                uploadPic: null
+            })
+        }
+    }
+
+    uploadProfilePic = (imgEvt) => {
+        // imgEvt.preventDefault()
+        const formData = new FormData()
+        formData.append('file', this.state.uploadPic)
+        axios.post(`/api/profile-pic`, formData, {
+            headers: {
+                'Content-Type': 'miltipart/form-data'
             }
-        } catch(e) {
-            alert(e)
+        }).then(async res => {
+            await this.setState({
+                profilePic: res.data.location
+            })
+        }).catch(error => {
+            console.log(error)
+        })
+    }
+
+    async updateAccount() {
+        try {
+        if (this.state.newPass1 === this.state.newPass2) {
+            if (this.state.profilePic !== this.props.profilePic) {
+                const formData = new FormData()
+                formData.append('file', this.state.uploadPic)
+                const upload = await axios.post(`/api/profile-pic`, formData, {
+                    headers: {
+                        'Content-Type': 'miltipart/form-data'
+                    }
+                })
+                this.setState({profilePic: upload.data.Location})
+            }
+            const { email, profilePic, username, name, currentPass, newPass1 } = this.state
+            const res = await axios.put('/auth/account', { email, profilePic, username, name, currentPass, newPass1 })
+            Swal({
+                customClass: 'swal-custom',
+                customContainerClass: 'swal-container',
+                backdrop: `
+                    linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                    `,
+                type: 'success',
+                title: 'Hooray!',
+                text: res.data.message,
+                showCloseButton: true,
+                confirmButtonText: 'Nice'
+            })
+        } else {
+            Swal({
+                customClass: 'swal-custom',
+                customContainerClass: 'swal-container',
+                backdrop: `
+                    linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                    `,
+                type: 'error',
+                title: 'Oops...',
+                text: `Passwords don't match`,
+                showCloseButton: true,
+                confirmButtonText: 'Try again'
+            })
+        }
+        } catch (e) {
+            Swal({
+                customClass: 'swal-custom',
+                customContainerClass: 'swal-container',
+                backdrop: `
+                linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                `,
+                type: 'error',
+                title: 'Oops...',
+                text: 'Incorrect password',
+                showCloseButton: true,
+                confirmButtonText: 'Try again'
+            })
         }
     }
 
     render() {
+        let profilePic = {
+            backgroundImage: `url(${this.state.profilePic})`
+        }
         return (
             <div className='account-info'>
-                <div className="profile-pic">
-                    <img src={this.state.profilePic} alt="" />
+                <div className="profile-pic"
+                    style={profilePic}
+                >
+                </div>
+                <div>
+                    <p>Profile Picture: </p>
+                    <input
+                        id='profile-pic-uploader'
+                        type="file"
+                        accept='image/*'
+                        // value={this.state.profilePic}
+                        onChange={e => this.changePic(e)}
+                    />
                 </div>
                 <div>
                     <p>Update Name: </p>
@@ -78,14 +169,6 @@ class AccountInfo extends Component {
                         type="text"
                         value={this.state.email}
                         onChange={e => this.handleChange('email', e)}
-                    />
-                </div>
-                <div>
-                    <p>Profile Picture: </p>
-                    <input
-                        type="text"
-                        value={this.state.profilePic}
-                        onChange={e => this.handleChange('profilePic', e)}
                     />
                 </div>
                 <div>

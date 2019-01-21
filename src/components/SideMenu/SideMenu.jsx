@@ -4,11 +4,16 @@ import { connect } from 'react-redux'
 import './SideMenu.scss'
 
 function SideMenu(props) {
+    let profilePic = {
+        backgroundImage: `url(${props.profilePic})`
+    }
     return (
         <div className={props.display ? 'side-menu slide-in' : 'side-menu'}>
             <span>{props.username}</span>
-            <div className='profile-pic'>
-                <img src={props.profilePic} alt='' />
+            <div className='profile-pic'
+                style={profilePic}
+            >
+                {/* <img src={props.profilePic} alt='' /> */}
             </div>
             <Link to='/' onClick={() => props.toggleFn('showSideMenu')}>
                 <h3>Browse Loops</h3>

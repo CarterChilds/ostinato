@@ -26,7 +26,11 @@ $hoverColor: rgb(44, 255, 241);
         width: 300px;
         height: 300px;
         border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         overflow: hidden;
+        background-size: cover;
     }
     .button {
         background: transparent;
@@ -40,5 +44,14 @@ $hoverColor: rgb(44, 255, 241);
             color: $hoverColor;
             border-color: $hoverColor;
         }
+    }
+}
+
+#profile-pic-uploader {
+    border: none;
+    margin-left: -58px;
+    // display: none;
+    button {
+        display: none;
     }
 }

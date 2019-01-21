@@ -13,9 +13,9 @@ export default function Banner(props) {
                 changeFn={() => console.log('work it!')}
             />
         ))}
-        <div className="main-overlay">
+        {/* <div className="main-overlay">
             <h2>Loop</h2>
-        </div>
+        </div> */}
         </div>
     )
 }

@@ -1,0 +1,56 @@
+.sound-selector {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 15px;
+    width: 98%;
+    margin: 5px 15px 15px 0;
+    select {
+        display: inline-block;
+        font-size: 16px;
+        width: 100%;
+        cursor: pointer;
+        padding: 8px 15px;
+        outline: 0;
+        border: 0;
+        border-bottom: 2px solid rgb(235, 235, 235);
+        border-radius: 0px;
+        background: transparent;
+        color: rgb(204, 204, 204);
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        transition: .3s;
+        &::-ms-expand {
+            display: none;
+        }
+        &:hover, &:focus {
+            color: rgb(225, 255, 44);
+            background: #cccccc;
+            border-bottom: 2px solid rgb(235, 235, 235);
+        }
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}
+.select_arrow {
+    position: absolute;
+    top: 6px;
+    right: 17px;
+    width: 16px;
+    height: 16px;
+    border: solid #cccccc;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+.sound-selector select:hover ~ .select_arrow,
+.sound-selector select:focus ~ .select_arrow {
+    border-color: rgb(225, 255, 44);
+}
+.sound-selector select:disabled ~ .select_arrow {
+    border-top-color: #cccccc;
+}

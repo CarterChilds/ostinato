@@ -1,0 +1,22 @@
+.play-button {
+    height: 100px;
+    width: 100px;
+    background: rgb(235, 235, 235);
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+        background: rgb(45, 255, 181);
+        cursor: pointer;
+    }
+    > .triangle {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 10px 0 10px 20px;
+        border-color: transparent transparent transparent #ffffff;
+        position: relative;
+        left: 2px;
+    }
+}

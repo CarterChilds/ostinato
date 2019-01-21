@@ -1,5 +1,5 @@
 import React from 'react'
-import './Transporter.css'
+import './Transporter.scss'
 
 export default function Transporter(props) {
     return (
