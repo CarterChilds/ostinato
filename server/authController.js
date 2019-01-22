@@ -34,23 +34,33 @@ module.exports = {
         req.session.user = { id: account[0].user_id, email: account[0].email, profilePic: account[0].profile_pic, username: account[0].username, name: account[0].name }
         res.status(200).send({ message: 'Logged in', userData: req.session.user, loggedIn: true })
     },
-    loggedIn: (req, res, next) => {
+    loggedIn: (req, res) => {
         if (req.session.user) {
             res.status(200).send(req.session.user)
         } else {
             res.status(401).send('Please log in or create an account')
         }
-        // const db = req.app.get('db')
-        // db.logged_in({id: req.session.user.id})
-        //     .then(userInfo => {
-        //         res.status(200).send(userInfo[0])
-        //     })
-        //     .catch(err => {
-        //         res.status(200).send({message: 'Please log in or register for a new account'})
-        //     })
     },
     logout: (req, res) => {
         req.session.destroy()
         res.redirect('http://localhost:3000/#/')
+    },
+    loopAuth: async (req, res) => {
+        const db = req.app.get('db')
+        const {id} = req.params
+
+        // check if req.session.user.id === loop's creator_id
+        const owner = await db.get_loop_owner({id: parseInt(id)})
+        if (owner[0].creator_id === req.session.user.id) return res.sendStatus(200)
+
+        // check if req.session.user.id is in share_table with this
+        const shared = await db.get_shared_loops({id: req.session.user.id})
+        if (shared) {
+            var found = shared.filter(loop => loop.loop_id == id)
+        }
+        if (found.length > 0) {
+            return res.sendStatus(200)
+        }
+        res.status(401).send({message: `You don't have access to this loop.`})
     }
 }

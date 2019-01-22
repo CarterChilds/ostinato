@@ -19,6 +19,8 @@ function LoopIcon(props) {
                 <h4>{props.title}</h4>
                 <h4>{props.tempo} bpm</h4>
                 <h4>Key: {key}</h4>
+                <h4>{props.instrument}</h4>
+                {props.creator ? <h4>Created by: {props.creator}</h4> : <h4>Created by me</h4>} 
             </div>
         </div>
     )

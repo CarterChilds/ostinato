@@ -1,6 +1,7 @@
 UPDATE loop SET 
 title=${title}, 
 tempo=${tempo}, 
+instrument=${instrument},
 key=${key}, 
 row_1=${row_1}, 
 row_2=${row_2}, 

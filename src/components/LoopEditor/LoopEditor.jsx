@@ -22,8 +22,8 @@ import tinnyPiano from '../../samples/c3/tinnyPiano.wav'
 import violins from '../../samples/c3/violins.wav'
 
 // SETUP FOR TONEJS ****************************************
+
 // create the synth
-console.log('synth created')
 let noteEngines = []
 for (let i = 0; i < 8; i++) {
     noteEngines.push(new Tone.Synth({
@@ -33,19 +33,20 @@ for (let i = 0; i < 8; i++) {
         envelope: {
             attack: 0.02,
             decay: 0.1,
-            sustain: 0.3,
+            sustain: 0.25,
             release: 1
         }
     }))
 }
 
-// create effects
+// manage volume
 var masterVolume = new Tone.Volume(-10);
 noteEngines.forEach(instrument => {
     instrument.chain(masterVolume, Tone.Master);
 })
 const gain = new Tone.Gain(0.3)
 
+// create effects
 const filter = new Tone.Filter({
     type: 'lowpass',
     frequency: 280,
@@ -58,9 +59,9 @@ const delay = new Tone.PingPongDelay(0.2, 0.4)
 delay.wet.value = 0.5;
 // delay.toMaster()  // I will attach this functionality to a button down below later
 
-// attach effects to the synth
+// attach volume and effects to the synth
 noteEngines.forEach(synth => {
-    synth.connect(filter).connect(delay).connect(gain)
+    synth.connect(filter).connect(gain)
 })
 
 // END TONE.JS SETUP ***************************************
@@ -72,12 +73,14 @@ class LoopEditor extends Component {
             title: 'New Loop',
             tempo: 120,
             key: 'c',
+            instrument: 'synth',
             rowData: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
             noteIDs: [[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]],
             scale: ['C4', 'B3', 'A3', 'G3', 'F3', 'E3', 'D3', 'C3'],
             activeNote: null,
             repeatId: null,
-            gain: -20
+            gain: -20,
+            bufferLoaded: false
         }
         this.toggleNote = this.toggleNote.bind(this)
         this.playPause = this.playPause.bind(this)
@@ -87,45 +90,77 @@ class LoopEditor extends Component {
     }
 
     async componentDidMount() {
-        this.componentWillUnmount()
-        Tone.context.suspend()
-        Tone.Transport.toggle()
+        Tone.Buffer.on('load', () => {
+            this.setState({bufferLoaded: !this.state.bufferLoaded})
+        })
+        await this.componentWillUnmount()
+        this.setState({activeNote: null})
+        await Tone.context.suspend()
+        await Tone.Transport.toggle()
         try {
+            // check if logged in
             const loginData = await axios.get('/auth/me')
             this.props.getUser(loginData.data)
+            // check if user has access to loop
+            await axios.post(`/auth/loop/${this.props.match.params.id}`)
         } catch (e) {
-            console.log(e)
+            await Swal({
+                customClass: 'swal-custom',
+                customContainerClass: 'swal-container',
+                type: 'error',
+                title: 'Access denied',
+                text: 'You do not have access to this loop',
+                confirmButtonColor: 'rgb(44, 255, 96)',
+                confirmButtonText: 'Home',
+                backdrop: `
+                linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                `
+            })
             this.props.history.push('/')
         }
 
         const { id } = this.props.match.params
         try {
             const loopData = await axios.get(`/api/loop/${id}`)
-            const { title, key, tempo, row_1, row_2, row_3, row_4, row_5, row_6, row_7, row_8 } = loopData.data[0]
+            const { title, key, tempo, instrument, row_1, row_2, row_3, row_4, row_5, row_6, row_7, row_8 } = loopData.data[0]
             const rowArray = [row_1.split(''), row_2.split(''), row_3.split(''), row_4.split(''), row_5.split(''), row_6.split(''), row_7.split(''), row_8.split('')]
             const rowData = rowArray.map(row => {
                 return row.map(note => Number(note))
             })
             this.setState({
-                rowData, title, key, tempo
+                rowData, title, key, tempo, instrument
             })
+            this.changeSound(this.state.instrument)
         } catch (e) {
             console.log('Loop id does not exist')
         }
         this.initializeSoundEngine()
-        this.state.rowData.forEach((row, rowIndex) => {
-            row.forEach((note, noteIndex) => {
-                if (note === 1) {
-                    this.addNote(rowIndex, noteIndex)
-                }
+        if (this.state.instrument === 'synth') {
+            this.state.rowData.forEach((row, rowIndex) => {
+                row.forEach((note, noteIndex) => {
+                    if (note === 1) {
+                        this.addNote(rowIndex, noteIndex)
+                    }
+                })
             })
-        })
+        }
+        await Tone.context.suspend()
+        await Tone.Transport.toggle()
     }
 
     async componentDidUpdate(prevProps, prevState) {
         if (this.props.match.params.id !== prevProps.match.params.id) {
             this.componentWillUnmount()
             this.componentDidMount()
+        }
+        if (this.state.bufferLoaded !== prevState.bufferLoaded) {
+            this.state.rowData.forEach((row, rowIndex) => {
+                row.forEach((note, noteIndex) => {
+                    if (note === 1) {
+                        this.addNote(rowIndex, noteIndex)
+                    }
+                })
+            })
         }
     }
 
@@ -157,7 +192,7 @@ class LoopEditor extends Component {
             } else {
                 this.setState({ activeNote: 0 })
             }
-        }, '16n')
+        }, '16n', 0)
         Tone.Transport.loop = true;
         Tone.Transport.loopStart = '0'
         Tone.Transport.loopEnd = '1m'
@@ -167,7 +202,6 @@ class LoopEditor extends Component {
         masterVolume.volume.value = this.state.gain
         Tone.Transport.start()
     }
-
 
     // KEY CHANGE FUNCTIONALITY!!!!! This is not finished, but I have started the logic. ***********************************
     // calculateScale() {
@@ -180,13 +214,14 @@ class LoopEditor extends Component {
 
     //     }
     // }
+
     async saveLoop() {
         const { id } = this.props.match.params
-        const { title, tempo, key, rowData } = this.state
+        const { title, tempo, instrument, key, rowData } = this.state
         const rows = rowData.map(row => (
             row.join('')
         ))
-        const res = await axios.put(`/api/loop/${id}`, { title, tempo, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
+        await axios.put(`/api/loop/${id}`, { title, tempo, instrument, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
         Swal({
             customClass: 'swal-custom',
             customContainerClass: 'swal-container',
@@ -206,8 +241,6 @@ class LoopEditor extends Component {
                 this.props.history.push('/dashboard')
             }
         })
-        // await alert(res.data.message)
-        // this.props.history.push('/dashboard')
     }
 
     async deleteLoop() {
@@ -225,11 +258,23 @@ class LoopEditor extends Component {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.value) {
                 axios.delete(`/api/loop/${id}`)
+                    .catch(err => {
+                        return Swal({
+                            customClass: 'swal-custom',
+                            customContainerClass: 'swal-container',
+                            backdrop: `
+                            linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                            `,
+                            title: 'Access Denied',
+                            text: `This feature is only available to the loop creator`,
+                            type: 'error'
+                        })
+                    })
                 this.componentWillUnmount()
-                Swal({
+                await Swal({
                     customClass: 'swal-custom',
                     customContainerClass: 'swal-container',
                     backdrop: `
@@ -262,7 +307,7 @@ class LoopEditor extends Component {
     }
 
     addNote(rowIndex, noteIndex) {
-        const noteID = Tone.Transport.schedule(() => noteEngines[rowIndex].triggerAttackRelease(this.state.scale[rowIndex], '8t'), `0:0:${noteIndex % 16}`)
+        const noteID = Tone.Transport.schedule(() => noteEngines[rowIndex].triggerAttackRelease(this.state.scale[rowIndex], '16n'), `0:0:${noteIndex % 16}`)
         let idArr = [...this.state.noteIDs]
         idArr[rowIndex][noteIndex] = noteID
         this.setState({
@@ -315,45 +360,56 @@ class LoopEditor extends Component {
 
     playPause() {
         if (Tone.context.state !== 'running') {
+            this.setState({
+                activeNote: null
+            })
             Tone.context.resume()
+            Tone.Transport.toggle()
+        } else {
+            Tone.context.suspend()
             Tone.Transport.toggle()
             this.setState({
                 activeNote: null
             })
-        } else {
-            Tone.context.suspend()
-            Tone.Transport.toggle()
         }
     }
 
-    changeSound(sampleSelection) {
+    async changeSound(sampleSelection) {
         Tone.context.suspend()
         let sampleToLoad = null
         switch (sampleSelection) {
             case 'acousticGuitar':
                 sampleToLoad = acousticGuitar
+                this.setState({instrument: 'acousticGuitar'})
                 break;
             case 'brass':
                 sampleToLoad = brass
+                this.setState({instrument: 'brass'})
                 break;
             case 'doubleBassPizz':
                 sampleToLoad = doubleBassPizz
+                this.setState({instrument: 'doubleBassPizz'})
                 break;
             case 'rhodes':
                 sampleToLoad = rhodes
+                this.setState({instrument: 'rhodes'})
                 break;
             case 'spaceKalimba':
                 sampleToLoad = spaceKalimba
+                this.setState({instrument: 'spaceKalimba'})
                 break;
             case 'tinnyPiano':
                 sampleToLoad = tinnyPiano
+                this.setState({instrument: 'tinnyPiano'})
                 break;
             case 'violins':
                 sampleToLoad = violins
+                this.setState({instrument: 'violins'})
                 break;
             default:
                 break;
         }
+        
         if (sampleSelection !== 'synth') {
             for (let i = 0; i < 8; i++) {
                 noteEngines[i] = (new Tone.Sampler({
@@ -361,15 +417,16 @@ class LoopEditor extends Component {
                 }))
             }
         } else if (sampleSelection === 'synth') {
+            this.setState({instrument: 'synth'})
             for (let i = 0; i < 8; i++) {
                 noteEngines[i] = (new Tone.Synth({
                     oscillator: {
                         type: 'square'
                     },
                     envelope: {
-                        attack: 0.01,
+                        attack: 0.02,
                         decay: 0.1,
-                        sustain: 0.1,
+                        sustain: 0.25,
                         release: 1
                     }
                 }))
@@ -379,7 +436,7 @@ class LoopEditor extends Component {
             instrument.chain(masterVolume, Tone.Master);
         })
         noteEngines.forEach(synth => {
-            synth.connect(filter).connect(delay).connect(gain)
+            synth.connect(gain)
         })
         Swal({
             position: 'top-end',

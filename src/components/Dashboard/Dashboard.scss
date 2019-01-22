@@ -4,10 +4,15 @@ $font: 'Inconsolata', monospace;
     display: flex;
     flex-wrap: wrap;
     width: 70vw;
-    max-width: 814px;
+    max-width: 874px;
     justify-content: flex-start;
     border: 2px solid;
     padding: 0 15px;
+    margin: 10px 0 30px 0;
+    h3 {
+        font-family: 'Didact Gothic', sans-serif;
+        margin: 10px 0;
+    }
 }
 
 div > h2 {

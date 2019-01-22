@@ -8,11 +8,11 @@ export default class SoundSelector extends Component {
     render() {
         return (
             <div className='sound-selector'>
-                <select name="soundSelector" onChange={async e => {
+                <select defaultValue='synth' name="soundSelector" onChange={async e => {
                     await this.setState({ selection: e.target.value })
                     this.props.loadFn(this.state.selection)
                 }}>
-                    <option selected disabled>Change Instrument</option>
+                    <option disabled value='synth'>Change Instrument</option>
                     <option value="acousticGuitar">Acoustic Guitar</option>
                     <option value="brass">Brass</option>
                     <option value="doubleBassPizz">Double Bass Pizzicato</option>

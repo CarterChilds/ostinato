@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const massive = require('massive')
 const session = require('express-session')
-const {SERVER_PORT, CONNECTION_STRING, SECRET, S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY} = process.env
+const { DEVELOPMENT, SERVER_PORT, CONNECTION_STRING, SECRET, S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env
 
 const app = express()
 
@@ -59,9 +59,11 @@ app.get('/api/loop/:id', loopCtrl.getLoop)
 app.put('/api/loop/:id', loopCtrl.saveLoop)
 app.post('/api/loop', loopCtrl.newLoop)
 app.delete('/api/loop/:id', loopCtrl.deleteLoop)
+app.post('/auth/loop/:id', authCtrl.loopAuth)
 
 // Endpoints for Dashboard View
-app.get('/api/loops', loopCtrl.getLoops)
+app.get('/api/loops', loopCtrl.getUserLoops)
+app.get('/api/shared', loopCtrl.getSharedLoops)
 
 // Endpoints for account editing
 app.put('/auth/account', acctCtrl.updateAccount)
