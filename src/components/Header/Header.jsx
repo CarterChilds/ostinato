@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './Header.scss'
+import logo from '../../img/logov3.svg'
 import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getUser } from '../../ducks/reducer'
@@ -12,6 +13,7 @@ class Header extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            showLogo: true,
             showLogin: false,
             showRegister: false,
             showSideMenu: false,
@@ -30,7 +32,7 @@ class Header extends Component {
         try {
             const loginData = await axios.get('/auth/me')
             this.props.getUser(loginData.data)
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         }
     }
@@ -81,12 +83,16 @@ class Header extends Component {
         // console.log(this.props)
         return (
             <div className='header'>
-                <Link 
-                    onClick={() => this.setState({showSideMenu: false})}
+                <Link
+                    onClick={() => this.setState({ showSideMenu: false })}
                     to='/'
                 >
-                    <div className="logo">
-                        <h1>{`OSTINATO`}</h1>
+                    <div 
+                        className="logo"
+                        id={this.state.showLogo ? '' : 'hide-logo'}
+                    >
+                        {/* <h1>{`OSTINATO`}</h1> */}
+                        <img src={logo} alt='logo' />
                     </div>
                 </Link>
 
@@ -138,7 +144,7 @@ class Header extends Component {
                     display={this.state.showLogin}
                     toggleFn={this.toggle}
                 />
-                <SideMenu 
+                <SideMenu
                     display={this.state.showSideMenu}
                     toggleFn={this.toggle}
                     logoutFn={this.logout}

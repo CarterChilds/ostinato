@@ -44,6 +44,7 @@ class Login extends Component {
             <div
                 className={this.props.display ? 'modal-background display' : 'modal-background'}
             >
+                <div className="background-cover"></div>
                 <div className='login-modal'>
                     <div 
                         className="close"

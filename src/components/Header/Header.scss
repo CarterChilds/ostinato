@@ -1,14 +1,14 @@
 $font: 'Inconsolata', monospace;
+$hover-color: rgb(171, 255, 44);
 
 .header {
     top: 0;
     width: 100vw;
     background: black;
-    height: 50px;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
     position: fixed;
     z-index: 1;
 }
@@ -23,6 +23,10 @@ $font: 'Inconsolata', monospace;
     background: white;
     opacity: .85;
     z-index: 2;
+    img {
+        // height: 100%;
+        width: 200px;
+    }
     &:hover {
         opacity: 1;
     }
@@ -48,11 +52,14 @@ $font: 'Inconsolata', monospace;
     transition: .2s;
     z-index: 2;
     &:hover {
-        color: rgb(171, 255, 44);
+        color: $hover-color;
+        border-color: $hover-color;
         cursor: pointer;
-        border-color: rgb(171, 255, 44);
     }
     h3 {
         font-weight: 700;
     }
+}
+#hide-logo {
+    display: none;
 }

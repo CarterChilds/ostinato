@@ -1,19 +1,32 @@
 $font: 'Inconsolata', monospace;
+$gradient1: rgba(226, 255, 51, .5);
+$gradient2: rgba(45, 255, 241, .5);
 
 .banner {
-    height: 30vw;
+    background-image: linear-gradient($gradient1, $gradient2);
+    height: calc(100vh - 60px);
     min-height: 400px;
     display: flex;
     position: relative;
     flex-direction: column;
-    align-items: flex-start;
     justify-content: center;
     align-items: center;
     // background-color: rgba(0,0,0,.5);
-    // background-image: linear-gradient(120deg, rgba(45, 255, 241, .5), rgba(226, 255, 51, .5));
     width: 100vw;
     margin-top: -20px;
     font-family: $font;
+    .banner-content {
+        width: 50%;
+        padding: 50px 0 250px 0;
+        text-align: center;
+    };
+    #logo-container {
+        text-align: right;
+        width: 100%;
+        h1 {
+            color: #333;
+        };
+    }
     .main-overlay {
         background: rgba(45, 255, 241, .8);
         padding: 30px;
@@ -23,4 +36,51 @@ $font: 'Inconsolata', monospace;
             font-family: 'Didact Gothic', sans-serif;
         }
     }
+}
+
+// BUTTON
+.button-wrapper {
+    height: 60px;
+    margin: 30px auto 0 auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 320px;
+}
+
+.shape {
+    fill: transparent;
+    stroke-dasharray: 140 540;
+    stroke-dashoffset: -474;
+    stroke-width: 8px;
+    stroke: #19f6e8;
+}
+
+.button-text {
+    color: #333;
+    font-size: 22px;
+    letter-spacing: 5px;
+    line-height: 32px;
+    position: relative;
+    top: -40px;
+    cursor: pointer;
+}
+
+@keyframes draw {
+    0% {
+        stroke-dasharray: 140 540;
+        stroke-dashoffset: -474;
+        stroke-width: 8px;
+    }
+    100% {
+        stroke-dasharray: 760;
+        stroke-dashoffset: 0;
+        stroke-width: 2px;
+    }
+}
+
+.button-wrapper:hover .shape {
+    cursor: pointer;
+    -webkit-animation: 0.5s draw linear forwards;
+    animation: 0.5s draw linear forwards;
 }

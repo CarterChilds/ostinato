@@ -1,2 +1,2 @@
 SELECT * FROM user_account
-WHERE email = $(email)
+WHERE email = $(email);

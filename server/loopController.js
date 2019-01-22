@@ -27,8 +27,16 @@ module.exports = {
                 res.status(500).send(err.message)
             })
     },
-    shareLoop: (req, res) => {
-
+    shareLoop: async (req, res) => {
+        const db = req.app.get('db')
+        const {id:loop_id} = req.params
+        const {email} = req.body
+        const sharedUser = await db.find_account({email})
+        if (sharedUser[0]) {
+            await db.share_loop({user_id: sharedUser[0].user_id, loop_id})
+            return res.status(200).send({message: `Loop shared with ${sharedUser[0].username}`})
+        } 
+        return res.status(403).send({message: `Email is not associated with any user`})
     },
     deleteLoop: async (req, res) => {
         const db = req.app.get('db')

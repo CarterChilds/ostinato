@@ -60,6 +60,7 @@ app.put('/api/loop/:id', loopCtrl.saveLoop)
 app.post('/api/loop', loopCtrl.newLoop)
 app.delete('/api/loop/:id', loopCtrl.deleteLoop)
 app.post('/auth/loop/:id', authCtrl.loopAuth)
+app.post('/api/share/:id', loopCtrl.shareLoop)
 
 // Endpoints for Dashboard View
 app.get('/api/loops', loopCtrl.getUserLoops)

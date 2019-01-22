@@ -8,10 +8,10 @@ $backgroundColor: rgb(255, 254, 250);
     > div {
         display: flex;
         justify-content: space-between;
-        width: 120px;
+        width: 163px;
     }
     i {
-        margin: 0 3px;
+        margin: 0 5px;
         color: rgb(225, 225, 225);
         transition: .1s;
         &:hover {
@@ -21,10 +21,13 @@ $backgroundColor: rgb(255, 254, 250);
             color: rgb(45, 255, 181);
         }
         &:nth-of-type(2):hover {
-            color: rgb(255, 210, 100);
+            color: rgb(255, 136, 100);
         }
         &:nth-of-type(3):hover {
             color: rgb(44, 255, 241);
+        }
+        &:nth-of-type(4):hover {
+            color: rgb(255, 210, 100);
         }
         &:active {
             color: rgb(225, 255, 44);

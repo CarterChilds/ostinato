@@ -91,10 +91,10 @@ class LoopEditor extends Component {
 
     async componentDidMount() {
         Tone.Buffer.on('load', () => {
-            this.setState({bufferLoaded: !this.state.bufferLoaded})
+            this.setState({ bufferLoaded: !this.state.bufferLoaded })
         })
         await this.componentWillUnmount()
-        this.setState({activeNote: null})
+        this.setState({ activeNote: null })
         await Tone.context.suspend()
         await Tone.Transport.toggle()
         try {
@@ -290,7 +290,6 @@ class LoopEditor extends Component {
     }
 
     resetLoop() {
-        // this.componentWillUnmount()
         this.componentDidMount()
         Swal({
             customClass: 'swal-custom',
@@ -304,6 +303,51 @@ class LoopEditor extends Component {
             showConfirmButton: false,
             timer: 1000
         })
+    }
+
+    async shareLoop() {
+        const { id } = this.props.match.params
+        const {value: email} = await Swal({
+            customClass: 'swal-custom',
+            customContainerClass: 'swal-container',
+            backdrop: `
+            linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+            `,
+            title: 'Share Loop',
+            input: 'email',
+            inputPlaceholder: `Email`,
+            showCancelButton: 'true',
+            confirmButtonText: 'Share',
+        })
+        if (email) {
+            try {
+                const res = await axios.post(`/api/share/${id}`, {email})
+                Swal({
+                    customClass: 'swal-custom',
+                    customContainerClass: 'swal-container',
+                    backdrop: `
+                    linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                    `,
+                    type: 'success',
+                    title: 'Shared!',
+                    text: res.data.message
+                })
+            } catch (err) {
+                console.log(err)
+                Swal({
+                    customClass: 'swal-custom',
+                    customContainerClass: 'swal-container',
+                    backdrop: `
+                    linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                    `,
+                    type: 'warning',
+                    title: 'Awkward...',
+                    text: `This email does not have an account! 
+                    We'll invite to join you on Ostinato. :)`
+                })
+            }
+        }
+
     }
 
     addNote(rowIndex, noteIndex) {
@@ -380,36 +424,36 @@ class LoopEditor extends Component {
         switch (sampleSelection) {
             case 'acousticGuitar':
                 sampleToLoad = acousticGuitar
-                this.setState({instrument: 'acousticGuitar'})
+                this.setState({ instrument: 'acousticGuitar' })
                 break;
             case 'brass':
                 sampleToLoad = brass
-                this.setState({instrument: 'brass'})
+                this.setState({ instrument: 'brass' })
                 break;
             case 'doubleBassPizz':
                 sampleToLoad = doubleBassPizz
-                this.setState({instrument: 'doubleBassPizz'})
+                this.setState({ instrument: 'doubleBassPizz' })
                 break;
             case 'rhodes':
                 sampleToLoad = rhodes
-                this.setState({instrument: 'rhodes'})
+                this.setState({ instrument: 'rhodes' })
                 break;
             case 'spaceKalimba':
                 sampleToLoad = spaceKalimba
-                this.setState({instrument: 'spaceKalimba'})
+                this.setState({ instrument: 'spaceKalimba' })
                 break;
             case 'tinnyPiano':
                 sampleToLoad = tinnyPiano
-                this.setState({instrument: 'tinnyPiano'})
+                this.setState({ instrument: 'tinnyPiano' })
                 break;
             case 'violins':
                 sampleToLoad = violins
-                this.setState({instrument: 'violins'})
+                this.setState({ instrument: 'violins' })
                 break;
             default:
                 break;
         }
-        
+
         if (sampleSelection !== 'synth') {
             for (let i = 0; i < 8; i++) {
                 noteEngines[i] = (new Tone.Sampler({
@@ -417,7 +461,7 @@ class LoopEditor extends Component {
                 }))
             }
         } else if (sampleSelection === 'synth') {
-            this.setState({instrument: 'synth'})
+            this.setState({ instrument: 'synth' })
             for (let i = 0; i < 8; i++) {
                 noteEngines[i] = (new Tone.Synth({
                     oscillator: {
@@ -439,7 +483,12 @@ class LoopEditor extends Component {
             synth.connect(gain)
         })
         Swal({
-            position: 'top-end',
+            customClass: 'swal-custom',
+            customContainerClass: 'swal-container',
+            backdrop: `
+            rgba(0,0,0,0)
+            `,
+            position: 'center',
             type: 'success',
             title: `${sampleSelection} loaded!`,
             showConfirmButton: false,
@@ -468,6 +517,10 @@ class LoopEditor extends Component {
                         <i
                             className='fas fa-undo fa-2x'
                             onClick={() => this.resetLoop()}
+                        />
+                        <i
+                            className='fas fa-share-square fa-2x'
+                            onClick={() => this.shareLoop()}
                         />
                     </div>
                 </div>

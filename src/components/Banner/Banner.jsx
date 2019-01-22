@@ -1,21 +1,22 @@
 import React from 'react'
 import './Banner.scss'
-import SequenceRow from '../LoopEditor/SequenceRow/SequenceRow'
+import logo from '../../img/logov2.svg'
 
 export default function Banner(props) {
-    const data=[[0,0,0,0,0,0,0,0,1,0,0,0], [0,0,0,0,0,0,0,0,0,1,1,0], [0,0,0,0,0,0,1,1,0,0,0,0], [0,0,0,0,1,0,0,0,0,0,0,0], [1,0,1,0,0,0,0,0,0,0,0,0]]
     return (
         <div className='banner'>
-        {data.map((row, i) => (
-            <SequenceRow 
-                key={i}
-                data={data[i]}
-                changeFn={() => console.log('work it!')}
-            />
-        ))}
-        {/* <div className="main-overlay">
-            <h2>Loop</h2>
-        </div> */}
+            <div className='banner-content'>
+                <div id='logo-container'>
+                    <img src={logo} alt="" />
+                    <h1>Social Beatmaker</h1>
+                </div>
+                <div className="button-wrapper">
+                    <svg height='60' width='320' xmlns='http://www.w3.org/2000/svg'>
+                        <rect className='shape' height='60' width='320' />
+                    </svg>
+                    <div className="button-text">EXPLORE</div>
+                </div>
+            </div>
         </div>
     )
 }
