@@ -83,15 +83,15 @@ const io = socket(
 
 // SOCKETS
 io.on('connection', socket => {
-    console.log('socket connected')
+    // console.log('socket connected')
     // Socket for each loop
     socket.on('join room', data => {
         socket.join(data.room)
-        console.log('joined room ', data.room)
+        // console.log('joined room', data.room)
         io.to(data.room).emit('room joined', data)
     })
-    socket.on('blast new note array', data => {
-        console.log('blast hit room ', data.room)
+    socket.on('change note', data => {
+        // console.log('note changed ', data.room)
         io.to(data.room).emit('update note', data)
     })
 })

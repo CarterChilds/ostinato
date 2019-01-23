@@ -512,7 +512,7 @@ class LoopEditor extends Component {
     // }
 
     sendNote = (rowIndex, noteIndex) => {
-        this.socket.emit(`blast new note array`, {
+        this.socket.emit(`change note`, {
             room: this.props.match.params.id,
             rowIndex: rowIndex,
             noteIndex: noteIndex
