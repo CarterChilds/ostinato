@@ -28,7 +28,7 @@ module.exports = {
 
         // check if password is correct
         const result = bcrypt.compareSync(password, account[0].hash)
-        if (!result) return res.status(401).send({ message: 'Incorrect password' })
+        if (!result) return res.status(200).send({ message: 'Incorrect password' })
 
         // place data on session
         req.session.user = { id: account[0].user_id, email: account[0].email, profilePic: account[0].profile_pic, username: account[0].username, name: account[0].name }

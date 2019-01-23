@@ -351,7 +351,10 @@ class LoopEditor extends Component {
     }
 
     addNote(rowIndex, noteIndex) {
-        const noteID = Tone.Transport.schedule(() => noteEngines[rowIndex].triggerAttackRelease(this.state.scale[rowIndex], '16n'), `0:0:${noteIndex % 16}`)
+        const noteID = Tone.Transport.schedule(
+            () => noteEngines[rowIndex].triggerAttackRelease(this.state.scale[rowIndex], '16n',),
+            // Tone.Draw.schedule(() => console.log('hit')),
+            `0:0:${noteIndex % 16}`)
         let idArr = [...this.state.noteIDs]
         idArr[rowIndex][noteIndex] = noteID
         this.setState({
