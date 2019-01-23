@@ -307,7 +307,7 @@ class LoopEditor extends Component {
 
     async shareLoop() {
         const { id } = this.props.match.params
-        const {value: email} = await Swal({
+        const { value: email } = await Swal({
             customClass: 'swal-custom',
             customContainerClass: 'swal-container',
             backdrop: `
@@ -321,7 +321,7 @@ class LoopEditor extends Component {
         })
         if (email) {
             try {
-                const res = await axios.post(`/api/share/${id}`, {email})
+                const res = await axios.post(`/api/share/${id}`, { email })
                 Swal({
                     customClass: 'swal-custom',
                     customContainerClass: 'swal-container',
@@ -352,7 +352,7 @@ class LoopEditor extends Component {
 
     addNote(rowIndex, noteIndex) {
         const noteID = Tone.Transport.schedule(
-            () => noteEngines[rowIndex].triggerAttackRelease(this.state.scale[rowIndex], '16n',),
+            () => noteEngines[rowIndex].triggerAttackRelease(this.state.scale[rowIndex], '16n'),
             // Tone.Draw.schedule(() => console.log('hit')),
             `0:0:${noteIndex % 16}`)
         let idArr = [...this.state.noteIDs]
@@ -499,9 +499,28 @@ class LoopEditor extends Component {
         })
     }
 
+    audioVisualizer() {
+        const analyser = new Tone.Waveform(32)
+        // Tone.Master.connect(analyser)
+        analyser.connect(Tone.Master)
+        console.log(analyser.getValue())
+    }
+
     render() {
+        this.audioVisualizer()
+        let progressStyle = {
+            width: `${Tone.Transport.progress * 107}vw`,
+            backgroundImage: `linear-gradient(to right, rgba(226, 255, 51, .2), rgba(45, 255, 241, .2)`,
+            height: `calc(100vh - 60px)`,
+            position: `absolute`,
+            left: 0,
+            top: `60px`,
+            zIndex: -5,
+            transition: `.2s`
+        }
         return (
-            <div>
+            <div className='constant-background'>
+                <div className='changing-background' style={progressStyle}></div>
                 <div className='loop-title-bar'>
                     <input
                         type='text'
