@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './LoopEditor.scss'
 import Tone from 'tone'
 import Swal from 'sweetalert2'
+import io from 'socket.io-client'
 import axios from 'axios';
 import { connect } from 'react-redux'
 import { getUser } from '../../ducks/reducer'
@@ -87,6 +88,8 @@ class LoopEditor extends Component {
         this.changeTempo = this.changeTempo.bind(this)
         this.changeVolume = this.changeVolume.bind(this)
         this.changeSound = this.changeSound.bind(this)
+        this.socket = io.connect(':5647')
+        this.socket.on('update note', data => this.toggleNote(data.rowIndex, data.noteIndex))
     }
 
     async componentDidMount() {
@@ -94,6 +97,7 @@ class LoopEditor extends Component {
             this.setState({ bufferLoaded: !this.state.bufferLoaded })
         })
         await this.componentWillUnmount()
+        this.socket.emit('join room', {room: this.props.match.params.id})
         this.setState({ activeNote: null })
         await Tone.context.suspend()
         await Tone.Transport.toggle()
@@ -343,7 +347,7 @@ class LoopEditor extends Component {
                     type: 'warning',
                     title: 'Awkward...',
                     text: `This email does not have an account! 
-                    We'll invite to join you on Ostinato. :)`
+                    We'll send an invite to join you on Ostinato. :)`
                 })
             }
         }
@@ -499,15 +503,23 @@ class LoopEditor extends Component {
         })
     }
 
-    audioVisualizer() {
-        const analyser = new Tone.Waveform(32)
-        // Tone.Master.connect(analyser)
-        analyser.connect(Tone.Master)
-        console.log(analyser.getValue())
+    // TODO: AUDIO VISUALIZER! I haven't got waveform data to populate yet - it is giving me an array of 0s.
+    // audioVisualizer() {
+    //     const analyser = new Tone.Waveform(32)
+    //     Tone.Master.connect(analyser)
+    //     // analyser.connect(Tone.Master)
+    //     console.log(analyser.getValue())
+    // }
+
+    sendNote = (rowIndex, noteIndex) => {
+        this.socket.emit(`blast new note array`, {
+            room: this.props.match.params.id,
+            rowIndex: rowIndex,
+            noteIndex: noteIndex
+        })
     }
 
     render() {
-        this.audioVisualizer()
         let progressStyle = {
             width: `${Tone.Transport.progress * 107}vw`,
             backgroundImage: `linear-gradient(to right, rgba(226, 255, 51, .2), rgba(45, 255, 241, .2)`,
@@ -555,6 +567,7 @@ class LoopEditor extends Component {
                             note={this.state.scale[index]}
                             changeFn={this.toggleNote}
                             activeNote={this.state.activeNote}
+                            sendFn={this.sendNote}
                         />
                     ))}
                 </div>

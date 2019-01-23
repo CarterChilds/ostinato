@@ -2,10 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const massive = require('massive')
 const session = require('express-session')
-const nodemailer = require('nodemailer')
-const { google } = require('googleapis')
-const OAuth2 = google.auth.OAuth2
-const { DEVELOPMENT, SERVER_PORT, CONNECTION_STRING, SECRET, S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env
+const socket = require('socket.io')
+const { SERVER_PORT, CONNECTION_STRING, SECRET, S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env
 
 const app = express()
 
@@ -77,5 +75,23 @@ app.post('/api/profile-pic', acctCtrl.profilePic)
 
 massive(CONNECTION_STRING).then(db => {
     app.set('db', db)
+    console.log('database connected')
+})
+const io = socket(
     app.listen(SERVER_PORT, () => console.log(`${SERVER_PORT} Rubber Ducks!`))
+)
+
+// SOCKETS
+io.on('connection', socket => {
+    console.log('socket connected')
+    // Socket for each loop
+    socket.on('join room', data => {
+        socket.join(data.room)
+        console.log('joined room ', data.room)
+        io.to(data.room).emit('room joined', data)
+    })
+    socket.on('blast new note array', data => {
+        console.log('blast hit room ', data.room)
+        io.to(data.room).emit('update note', data)
+    })
 })
