@@ -1,6 +1,11 @@
 $font: 'Inconsolata', monospace;
 $backgroundColor: rgb(255, 254, 250);
 
+.constant-background {
+    background-color: $backgroundColor;
+    padding: 30px;
+}
+
 .loop-title-bar {
     display: flex;
     justify-content: space-between;
