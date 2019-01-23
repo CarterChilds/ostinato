@@ -2,10 +2,14 @@ require('dotenv').config()
 const express = require('express')
 const massive = require('massive')
 const session = require('express-session')
+const nodemailer = require('nodemailer')
+const { google } = require('googleapis')
+const OAuth2 = google.auth.OAuth2
 const { DEVELOPMENT, SERVER_PORT, CONNECTION_STRING, SECRET, S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env
 
 const app = express()
 
+// AMAZON S3 SETUP *****************************************
 // PACKAGES TO GET AWS S3 UPLOADING:
 const AWS = require('aws-sdk')
 const bluebird = require('bluebird')
@@ -34,6 +38,7 @@ const uploadFile = (buffer, name, type) => {
     return s3.upload(params).promise()
 }
 app.set('uploadFile', uploadFile)
+// END AMAZON S3 SETUP *************************************
 
 // CONTROLLERS
 const loopCtrl = require('./loopController')

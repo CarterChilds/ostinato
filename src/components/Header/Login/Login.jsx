@@ -4,6 +4,7 @@ import axios from 'axios'
 import {withRouter} from 'react-router-dom'
 import {getUser} from '../../../ducks/reducer'
 import {connect} from 'react-redux'
+import Swal from 'sweetalert2'
 
 class Login extends Component {
     constructor(props) {
@@ -20,7 +21,7 @@ class Login extends Component {
         })
     }
     handleKeyDown = evt => {
-        if (evt.keyCode === 13) {                //This allows you to press Enter to add the new team. // The key code for enter is 13.
+        if (evt.keyCode === 13) {           //This allows you to press Enter to add the new team. // The key code for enter is 13.
           this.login();
         }
       }
@@ -35,6 +36,19 @@ class Login extends Component {
             this.setState({
                 email: '',
                 password: ''
+            })
+        } else {
+            Swal({
+                customClass: 'swal-custom',
+                customContainerClass: 'swal-container',
+                type: 'error',
+                title: 'Uh oh...',
+                text: res.data.message,
+                confirmButtonColor: 'rgb(44, 255, 96)',
+                confirmButtonText: 'Try again',
+                backdrop: `
+                linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                `
             })
         }
     }

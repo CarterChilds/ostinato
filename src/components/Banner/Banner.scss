@@ -45,13 +45,13 @@ $gradient2: rgba(45, 255, 241, .5);
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    width: 320px;
+    width: 220px;
 }
 
 .shape {
     fill: transparent;
-    stroke-dasharray: 140 540;
-    stroke-dashoffset: -474;
+    stroke-dasharray: 140 440;
+    stroke-dashoffset: -325;
     stroke-width: 8px;
     stroke: #19f6e8;
 }
@@ -62,20 +62,20 @@ $gradient2: rgba(45, 255, 241, .5);
     letter-spacing: 5px;
     line-height: 32px;
     position: relative;
-    top: -40px;
+    top: -47px;
     cursor: pointer;
 }
 
 @keyframes draw {
     0% {
-        stroke-dasharray: 140 540;
-        stroke-dashoffset: -474;
+        stroke-dasharray: 140 340;
+        stroke-dashoffset: -325;
         stroke-width: 8px;
     }
     100% {
-        stroke-dasharray: 760;
+        stroke-dasharray: 560;
         stroke-dashoffset: 0;
-        stroke-width: 2px;
+        stroke-width: 3px;
     }
 }
 
