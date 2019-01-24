@@ -219,30 +219,29 @@ class LoopEditor extends Component {
     //     }
     // }
 
-    async saveLoop() {
-        const { id } = this.props.match.params
+    async copyLoop() {
         const { title, tempo, instrument, key, rowData } = this.state
         const rows = rowData.map(row => (
             row.join('')
         ))
-        await axios.put(`/api/loop/${id}`, { title, tempo, instrument, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
+        const newID = await axios.post(`/api/copy`, { title, tempo, instrument, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
         Swal({
             customClass: 'swal-custom',
             customContainerClass: 'swal-container',
             type: 'success',
-            title: 'Loop saved',
+            title: 'Loop copied',
             text: 'Do you want to keep working on this loop?',
             showCancelButton: true,
-            cancelButtonText: 'Keep Working',
+            cancelButtonText: 'Stay here',
             confirmButtonColor: 'rgb(44, 255, 96)',
-            confirmButtonText: 'Dashboard',
+            confirmButtonText: 'Switch to copy',
             backdrop: `
             linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
             `
         }).then(result => {
             if (result.value) {
                 this.componentWillUnmount()
-                this.props.history.push('/dashboard')
+                this.props.history.push(`/loop/${newID.data.loop_id}`)
             }
         })
     }
@@ -266,7 +265,7 @@ class LoopEditor extends Component {
             if (result.value) {
                 axios.delete(`/api/loop/${id}`)
                     .catch(err => {
-                        return Swal({
+                        Swal({
                             customClass: 'swal-custom',
                             customContainerClass: 'swal-container',
                             backdrop: `
@@ -276,6 +275,7 @@ class LoopEditor extends Component {
                             text: `This feature is only available to the loop creator`,
                             type: 'error'
                         })
+                        this.props.history.push('/dashboard')
                     })
                 this.componentWillUnmount()
                 await Swal({
@@ -294,7 +294,14 @@ class LoopEditor extends Component {
     }
 
     resetLoop() {
-        this.componentDidMount()
+        this.state.noteIDs.forEach((row, rowIndex) => {
+            row.forEach((noteID, noteIndex) => {
+                if (noteID) {
+                    this.toggleNote(rowIndex, noteIndex)
+                }
+            })
+        })
+        // this.componentDidMount()
         Swal({
             customClass: 'swal-custom',
             customContainerClass: 'swal-container',
@@ -395,7 +402,7 @@ class LoopEditor extends Component {
         }
     }
 
-    toggleNote(rowIndex, noteIndex) {
+    async toggleNote(rowIndex, noteIndex) {
         let newArr = this.state.rowData.slice()
         if (newArr[rowIndex][noteIndex] === 0) {
             newArr[rowIndex][noteIndex] = 1
@@ -407,6 +414,13 @@ class LoopEditor extends Component {
         this.setState({
             rowData: newArr
         })
+        // (below) Save new note to database immediately so users joining the editor view will be in sync
+        const { id } = this.props.match.params
+        const { title, tempo, instrument, key, rowData } = this.state
+        const rows = rowData.map(row => (
+            row.join('')
+        ))
+        await axios.put(`/api/loop/${id}`, { title, tempo, instrument, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
     }
 
     playPause() {
@@ -503,7 +517,7 @@ class LoopEditor extends Component {
         })
     }
 
-    // TODO: AUDIO VISUALIZER! I haven't got waveform data to populate yet - it is giving me an array of 0s.
+    // TODO: AUDIO VISUALIZER! I haven't nailed down waveform data yet - it is giving me an array of 0s.
     // audioVisualizer() {
     //     const analyser = new Tone.Waveform(32)
     //     Tone.Master.connect(analyser)
@@ -541,8 +555,8 @@ class LoopEditor extends Component {
                     />
                     <div>
                         <i
-                            className='fas fa-save fa-2x'
-                            onClick={() => this.saveLoop()}
+                            className='fas fa-copy fa-2x'
+                            onClick={() => this.copyLoop()}
                         />
                         <i
                             className='fas fa-trash fa-2x'

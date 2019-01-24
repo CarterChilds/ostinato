@@ -1,5 +1,5 @@
 import React from 'react'
-import './SequenceRow.css'
+import './SequenceRow.scss'
 
 export default function SequenceRow(props) {
     return (

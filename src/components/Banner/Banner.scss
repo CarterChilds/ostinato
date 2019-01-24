@@ -41,19 +41,22 @@ $gradient2: rgba(45, 255, 241, .5);
 // BUTTON
 .button-wrapper {
     height: 60px;
-    margin: 30px auto 0 auto;
+    margin: 0 auto;
+    padding: 30px 0;
     position: relative;
+    text-align: center;
+    font-weight: 700;
     top: 50%;
     transform: translateY(-50%);
-    width: 220px;
+    width: 212px;
 }
 
 .shape {
     fill: transparent;
     stroke-dasharray: 140 440;
-    stroke-dashoffset: -325;
+    stroke-dashoffset: -312;
     stroke-width: 8px;
-    stroke: #19f6e8;
+    stroke: #000;
 }
 
 .button-text {
@@ -64,16 +67,17 @@ $gradient2: rgba(45, 255, 241, .5);
     position: relative;
     top: -47px;
     cursor: pointer;
+    transition: .4s;
 }
 
 @keyframes draw {
     0% {
         stroke-dasharray: 140 340;
-        stroke-dashoffset: -325;
+        stroke-dashoffset: -312;
         stroke-width: 8px;
     }
     100% {
-        stroke-dasharray: 560;
+        stroke-dasharray: 543;
         stroke-dashoffset: 0;
         stroke-width: 3px;
     }
