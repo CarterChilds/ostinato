@@ -1,4 +1,4 @@
-$font: 'Inconsolata', monospace;
+@import '../sassVars.scss';
 
 .dashboard {
     display: flex;
@@ -16,6 +16,6 @@ $font: 'Inconsolata', monospace;
 }
 
 div > h2 {
-    font-family: $font;
+    font-family: $primaryFont;
     font-size: 2em;
 }

@@ -1,5 +1,5 @@
-$font: 'Inconsolata', monospace;
-$hover-color: rgb(171, 255, 44);
+$primaryFont: 'Inconsolata', monospace;
+$headerButtonHover: rgb(171, 255, 44);
 
 .header {
     top: 0;
@@ -13,7 +13,7 @@ $hover-color: rgb(171, 255, 44);
     z-index: 1;
 }
 .logo {
-    font-family: $font;
+    font-family: $primaryFont;
     font-size: 2rem;
     display: inline-block;
     padding: 1px 30px;
@@ -42,7 +42,7 @@ $hover-color: rgb(171, 255, 44);
 }
 .header-button {
     color: white;
-    font-family: $font;
+    font-family: $primaryFont;
     padding: 3px 15px;
     width: 90px;
     display: flex;
@@ -52,8 +52,8 @@ $hover-color: rgb(171, 255, 44);
     transition: .2s;
     z-index: 1;
     &:hover {
-        color: $hover-color;
-        border-color: $hover-color;
+        color: $headerButtonHover;
+        border-color: $headerButtonHover;
         cursor: pointer;
     }
     h3 {

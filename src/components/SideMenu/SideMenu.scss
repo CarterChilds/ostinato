@@ -1,5 +1,4 @@
-$font: 'Inconsolata', monospace;
-$colorList: rgb(45, 255, 241), rgb(45, 255, 181), rgb(44, 255, 96), rgb(92, 255, 44), rgb(225, 255, 45);
+@import '../sassVars.scss';
 
 .side-menu {
     background-color: black;
@@ -16,7 +15,7 @@ $colorList: rgb(45, 255, 241), rgb(45, 255, 181), rgb(44, 255, 96), rgb(92, 255,
     flex-direction: column;
     transition: .3s;
     a {
-        font-family: $font;
+        font-family: $primaryFont;
         font-size: 1.5em;
         padding: 20px 0;
         transition: .2s;
@@ -48,7 +47,7 @@ $colorList: rgb(45, 255, 241), rgb(45, 255, 181), rgb(44, 255, 96), rgb(92, 255,
         }
     }
     span {
-        font-family: $font;
+        font-family: $primaryFont;
         font-size: 1.2em;
         align-self: flex-end;
     }

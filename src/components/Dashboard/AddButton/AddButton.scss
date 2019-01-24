@@ -1,8 +1,8 @@
-$square: 120px;
+@import '../../sassVars.scss';
 
 .add-container {
-    height: $square;
-    width: $square;
+    height: $iconSquare;
+    width: $iconSquare;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,8 +10,8 @@ $square: 120px;
     i:hover {
         cursor: pointer;
         color: #ADACA9;
-        background-color: rgb(225, 255, 44);
-        border: 2px solid rgb(225, 255, 44);
+        background-color: $iconHover;
+        border: 2px solid $iconHover;
         border-radius: 100px;
         transition: .3s;
     }
