@@ -8,10 +8,21 @@
     max-width: 220px;
     min-width: 130px;
     position: absolute;
-    top: -00vh;
+    top: -0vh;
     right: -220px;
+    display: none;
+    // display: flex;
+    // animation: slide-out .1s;
+    // animation-fill-mode: forwards;
+    // @keyframes slide-out {
+    //     0% {
+    //         right: 0;
+    //     }
+    //     100% {
+    //         right: -220px;
+    //     }
+    // }
     padding: 50px 10px;
-    display: flex;
     flex-direction: column;
     transition: .3s;
     a {
@@ -53,5 +64,34 @@
     }
 }
 .slide-in {
-    right: 0;
+    // right: 0;
+    display: flex;
+    animation: slide-in 1s;
+    animation-fill-mode: forwards;
+        @keyframes slide-in {
+            0% {
+                right: -220px;
+            }
+            100% {
+                right: 0;
+            }
+        }
+}
+
+@media (max-width: 375px) {
+    .side-menu {
+        display: none;
+    }
+    .slide-in {
+        display: flex;
+    }
+    a {
+        transition: 0;
+    }
+}
+
+@media (max-height: 420px) {
+    .side-menu {
+        height: auto;
+    }
 }

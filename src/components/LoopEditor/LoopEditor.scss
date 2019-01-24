@@ -129,3 +129,40 @@
 .swal2-title {
     font-family: $secondaryFont;
 }
+// DISPLAY FOR PHONE
+.resize-instruction {
+    display: none;
+}
+
+@media (max-width: 850px) {
+    .changing-background {
+        display: none;
+    }
+    .constant-background {
+        padding: 0px;
+        text-align: center;
+    }
+    .loop-title-bar {
+        position: relative;
+        right: 20px;
+        input {
+            font-size: 16px;
+            font-family: $primaryFont;
+        }
+        .fa-2x {
+            font-size: 1em;
+        }
+    }
+}
+
+@media (max-width: 420px) {
+    .changing-background, .loop-title-bar, .sequencer, .loop-settings-bar {
+        display: none;
+    }
+    .resize-instruction {
+        display: block;
+        font-family: $secondaryFont;
+        align-self: center;
+        justify-self: center;
+    }
+}

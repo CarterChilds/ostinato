@@ -39,6 +39,9 @@ $headerButtonHover: rgb(171, 255, 44);
     right: 10px;
     display: flex;
     z-index: 2;
+    i {
+        display: none;
+    }
 }
 .header-button {
     color: white;
@@ -62,4 +65,20 @@ $headerButtonHover: rgb(171, 255, 44);
 }
 #hide-logo {
     display: none;
+}
+
+@media (max-width: 830px) {
+    .header-button {
+        display: none;
+    }
+    .nav i {
+        color: white;
+        display: inline-block;
+    }
+    .header {
+        position: absolute;
+    }
+    .logo {
+        padding: 1px 10px;
+    }
 }

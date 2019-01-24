@@ -3,7 +3,7 @@
 .modal-background {
     background-image: linear-gradient(200deg, rgba(44, 255, 241, .5), rgba(223, 255, 45, .5));
     position: absolute;
-    left: 0;
+    right: 0;
     top: -100vh;
     display: flex;
     justify-content: center;
@@ -34,6 +34,7 @@
     }
     input {
         border: 2px solid;
+        font-size: 16px;
         height: 25px;
         background: transparent;
         transform: skew(-20deg);
@@ -107,4 +108,18 @@
 .display {
     display: flex;
     top: 0;
+}
+
+@media (max-height: 527px) {
+    .modal-background {
+        right: -100vw;
+        top: 0;
+        display: none;
+        text-align: center;
+    }
+    .display {
+        right: 0;
+        display: block;
+        text-align: center;
+    }
 }

@@ -575,6 +575,7 @@ class LoopEditor extends Component {
         }
         return (
             <div className='constant-background'>
+                <div className="resize-instruction"><h1>Please turn to landscape mode!</h1></div>
                 <div className='changing-background' style={progressStyle}></div>
                 <div className='loop-title-bar'>
                     <div>
