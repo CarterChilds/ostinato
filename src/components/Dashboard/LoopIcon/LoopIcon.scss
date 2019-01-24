@@ -1,17 +1,16 @@
-$font: 'Inconsolata', monospace;
-$square: 130px;
+@import '../../sassVars.scss';
 
 .icon-container {
     display: inline-block;
 }
 
 .loop-icon {
-    font-family: $font;
+    font-family: $primaryFont;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: $square;
-    height: $square;
+    width: $iconSquare;
+    height: $iconSquare;
     border: 2px solid;
     margin: 20px 5px;
     border-image: linear-gradient(to left, #61c69d 0%, #2d72bc 100%);
@@ -30,7 +29,7 @@ $square: 130px;
 
 .loop-icon:hover {
     cursor: pointer;
-    color: rgb(225, 255, 44);
+    color: $iconHover;
     background-color: rgba(0, 0, 0, 0.2);
     text-align: center;
     overflow: initial;

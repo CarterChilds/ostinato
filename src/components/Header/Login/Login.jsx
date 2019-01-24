@@ -71,7 +71,7 @@ class Login extends Component {
                     <div>
                         <p>Email:</p>
                         <input
-                            type="text"
+                            type="email"
                             value={this.state.email}
                             onChange={e => this.handleChange('email', e)}
                             onKeyDown={e => this.handleKeyDown(e)}

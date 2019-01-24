@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Banner from '../Banner/Banner'
-import Featured from '../Featured/Featured'
+import Features from '../Features/Features'
 
 export default class Home extends Component {
     constructor(props){ 
@@ -14,7 +14,7 @@ export default class Home extends Component {
         return (
             <div>
                 <Banner />
-                <Featured />
+                <Features />
             </div>
         )
     }

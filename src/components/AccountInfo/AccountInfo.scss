@@ -1,12 +1,11 @@
-$font: 'Inconsolata', monospace;
-$hoverColor: rgb(44, 255, 241);
+@import '../sassVars.scss';
 
 .account-info {
     display: flex;
     flex-direction: column;
     align-items: center;
     p {
-        font-family: $font;
+        font-family: $primaryFont;
         margin: 10px;
         width: 200px;
         display: inline-block;
@@ -18,8 +17,13 @@ $hoverColor: rgb(44, 255, 241);
         transform: skew(-20deg);
         margin-bottom: 15px;
         outline: none;
-        &:hover, &:focus {
-            border: solid 2px $hoverColor;
+        transition: .2s;
+        &:hover {
+            border: $blueHighlight solid 2px;
+        }
+        &:focus {
+            @extend input:hover;
+            box-shadow: 1px 1px 10px lightgray;
         }
     }
     .profile-pic {
@@ -34,15 +38,16 @@ $hoverColor: rgb(44, 255, 241);
     }
     .button {
         background: transparent;
-        font-family: $font;
+        font-family: $primaryFont;
         border: 2px solid;
         padding: 2px 20px;
         font-size: 1rem;
         margin-top: 20px;
+        transition: .2s;
         cursor: pointer;
         &:hover {
-            color: $hoverColor;
-            border-color: $hoverColor;
+            color: $blueHighlight;
+            border-color: $blueHighlight;
         }
     }
 }

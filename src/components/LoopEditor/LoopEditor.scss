@@ -1,5 +1,4 @@
-$font: 'Inconsolata', monospace;
-$backgroundColor: rgb(255, 254, 250);
+@import '../sassVars.scss';
 
 .constant-background {
     background-color: rgba(255, 254, 250, 0.8);
@@ -14,6 +13,12 @@ $backgroundColor: rgb(255, 254, 250);
         display: flex;
         justify-content: space-between;
         width: 163px;
+        .fa-arrow-left {
+            margin-right: 10px;
+        }
+        .fa-save {
+            margin-left: 10px;
+        }
     }
     i {
         margin: 0 5px;
@@ -38,11 +43,11 @@ $backgroundColor: rgb(255, 254, 250);
             color: rgb(225, 255, 44);
         }
     }
-    > input {
+    input {
         background: none;
         border: none;
         border-bottom: 3px solid rgb(204, 204, 204);
-        font-family: 'Inconsolata', monospace;
+        font-family: $primaryFont;
         font-size: 2em;
         color: rgb(204, 204, 204);
         transition: .2s;
@@ -67,17 +72,30 @@ $backgroundColor: rgb(255, 254, 250);
     justify-content: center;
 }
 .tempo-info > span, .volume-info > span {
-    font-family: 'Inconsolata', monospace;
+    font-family: $primaryFont;
     display: flex;
     justify-content: space-between;
 }
 
 .swal-custom {
-    background: $backgroundColor;
+    background: $backgroundWhite;
     color: black;
     border-radius: 0;
     border: 2px solid black;
-    font-family: $font;
+    font-family: $primaryFont;
+}
+
+.swal2-input {
+    border: 2px solid !important;
+    border-radius: 0 !important;
+    height: 25px;
+    background: transparent;
+    transform: skew(-20deg);
+    margin-bottom: 15px;
+    outline: none;
+    &:hover, &:focus {
+        border: $blueHighlight solid 2px !important;
+    }
 }
 
 .swal2-confirm, .swal2-cancel {
@@ -105,9 +123,9 @@ $backgroundColor: rgb(255, 254, 250);
 }
 
 .swal2-success-circular-line-left, .swal2-success-fix, .swal2-success-circular-line-right {
-    background-color: $backgroundColor !important;
+    background-color: $backgroundWhite !important;
 }
 
 .swal2-title {
-    font-family: 'Didact Gothic', sans-serif;
+    font-family: $secondaryFont;
 }

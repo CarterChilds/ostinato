@@ -35,7 +35,6 @@ module.exports = {
             })
     },
     copyLoop: (req, res) => {
-        console.log('hit')
         const db = req.app.get('db')
         const { id: creator_id } = req.session.user
         let { title, tempo, instrument, key, row_1, row_2, row_3, row_4, row_5, row_6, row_7, row_8 } = req.body
@@ -103,6 +102,7 @@ module.exports = {
         const owner = await db.get_loop_owner({ id: parseInt(id) })
         if (owner[0].creator_id !== req.session.user.id) return res.status(401).send({ message: `Only a loop's creator can delete it.` })
 
+        await db.remove_share({ loop_id: id })
         db.delete_loop({ loop_id: id })
             .then(() => {
                 res.status(200).send({ message: 'Loop deleted' })

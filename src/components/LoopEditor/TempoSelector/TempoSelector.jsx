@@ -1,5 +1,5 @@
 import React from 'react'
-import './TempoSelector.css'
+import './TempoSelector.scss'
 
 export default function TempoSelector(props) {
     return (

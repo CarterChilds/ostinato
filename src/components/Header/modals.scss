@@ -1,7 +1,7 @@
-$font: 'Inconsolata', monospace;
+@import '../sassVars.scss';
 
 .modal-background {
-    background-image: linear-gradient(200deg, rgba(44, 255, 241, .8), rgba(223, 255, 45, 0.8));
+    background-image: linear-gradient(200deg, rgba(44, 255, 241, .5), rgba(223, 255, 45, .5));
     position: absolute;
     left: 0;
     top: -100vh;
@@ -15,7 +15,7 @@ $font: 'Inconsolata', monospace;
 }
 
 .login-modal {
-    background: rgb(255, 254, 250);
+    background: $backgroundWhite;
     opacity: 1;
     display: flex;
     justify-content: center;
@@ -25,7 +25,7 @@ $font: 'Inconsolata', monospace;
     border: 2px solid;
     width: 300px;
     height: 360px;
-    font-family: $font;
+    font-family: $primaryFont;
     position: relative;
     span {
         position: absolute;
@@ -39,8 +39,13 @@ $font: 'Inconsolata', monospace;
         transform: skew(-20deg);
         margin-bottom: 15px;
         outline: none;
-        &:hover, &:focus {
-            border: rgb(44, 255, 241) solid 2px;
+        transition: .2s;
+        &:hover {
+            border: $blueHighlight solid 2px;
+        }
+        &:focus {
+            @extend input:hover;
+            box-shadow: 1px 1px 10px lightgray;
         }
     }
     p {
@@ -55,8 +60,8 @@ $font: 'Inconsolata', monospace;
         margin-top: 20px;
         cursor: pointer;
         &:hover {
-            color: rgb(44, 255, 241);
-            border-color: rgb(44, 255, 241);
+            color: $blueHighlight;
+            border-color: $blueHighlight;
         }
     }
     > p:nth-of-type(2) {
@@ -64,7 +69,7 @@ $font: 'Inconsolata', monospace;
         text-decoration: underline;
     }
     > p:nth-of-type(2):hover {
-        color: rgb(44, 255, 241);
+        color: $blueHighlight;
     }
     > .close {
         position: absolute;
@@ -89,7 +94,7 @@ $font: 'Inconsolata', monospace;
             transform: rotate(-45deg);
         }
         &:active {
-            background: rgb(44, 255, 241);
+            background: $blueHighlight;
         };
     }
 }

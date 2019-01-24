@@ -97,7 +97,7 @@ class LoopEditor extends Component {
             this.setState({ bufferLoaded: !this.state.bufferLoaded })
         })
         await this.componentWillUnmount()
-        this.socket.emit('join room', {room: this.props.match.params.id})
+        this.socket.emit('join room', { room: this.props.match.params.id })
         this.setState({ activeNote: null })
         await Tone.context.suspend()
         await Tone.Transport.toggle()
@@ -112,7 +112,7 @@ class LoopEditor extends Component {
                 customClass: 'swal-custom',
                 customContainerClass: 'swal-container',
                 type: 'error',
-                title: 'Access denied',
+                title: 'Access Denied',
                 text: 'You do not have access to this loop',
                 confirmButtonColor: 'rgb(44, 255, 96)',
                 confirmButtonText: 'Home',
@@ -120,7 +120,7 @@ class LoopEditor extends Component {
                 linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
                 `
             })
-            this.props.history.push('/')
+            return this.props.history.push('/')
         }
 
         const { id } = this.props.match.params
@@ -219,6 +219,34 @@ class LoopEditor extends Component {
     //     }
     // }
 
+    async saveLoop() {
+        const { id } = this.props.match.params
+        const { title, tempo, instrument, key, rowData } = this.state
+        const rows = rowData.map(row => (
+            row.join('')
+        ))
+        await axios.put(`/api/loop/${id}`, { title, tempo, instrument, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
+        Swal({
+            customClass: 'swal-custom',
+            customContainerClass: 'swal-container',
+            type: 'success',
+            title: 'Loop Saved',
+            text: 'Do you want to keep working on this loop?',
+            showCancelButton: true,
+            cancelButtonText: 'Stay here',
+            confirmButtonColor: 'rgb(44, 255, 96)',
+            confirmButtonText: 'Dashboard',
+            backdrop: `
+            linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+            `
+        }).then(result => {
+            if (result.value) {
+                this.componentWillUnmount()
+                this.props.history.push(`/dashboard`)
+            }
+        })
+    }
+
     async copyLoop() {
         const { title, tempo, instrument, key, rowData } = this.state
         const rows = rowData.map(row => (
@@ -229,7 +257,7 @@ class LoopEditor extends Component {
             customClass: 'swal-custom',
             customContainerClass: 'swal-container',
             type: 'success',
-            title: 'Loop copied',
+            title: 'Loop Copied',
             text: 'Do you want to keep working on this loop?',
             showCancelButton: true,
             cancelButtonText: 'Stay here',
@@ -255,12 +283,12 @@ class LoopEditor extends Component {
             linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
             `,
             title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            text: "If you have shared this loop, deleting will remove it from other users too!",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Delete it!'
         }).then(async (result) => {
             if (result.value) {
                 axios.delete(`/api/loop/${id}`)
@@ -326,6 +354,7 @@ class LoopEditor extends Component {
             `,
             title: 'Share Loop',
             input: 'email',
+            inputClass: 'swal2-input',
             inputPlaceholder: `Email`,
             showCancelButton: 'true',
             confirmButtonText: 'Share',
@@ -548,11 +577,21 @@ class LoopEditor extends Component {
             <div className='constant-background'>
                 <div className='changing-background' style={progressStyle}></div>
                 <div className='loop-title-bar'>
-                    <input
-                        type='text'
-                        value={this.state.title}
-                        onChange={e => this.handleChange('title', e)}
-                    />
+                    <div>
+                        <i
+                            className='fas fa-arrow-left fa-2x'
+                            onClick={() => this.props.history.push('/dashboard')}
+                        />
+                        <input
+                            type='text'
+                            value={this.state.title}
+                            onChange={e => this.handleChange('title', e)}
+                        />
+                        <i
+                            className='fas fa-save fa-2x'
+                            onClick={() => this.saveLoop()}
+                        />
+                    </div>
                     <div>
                         <i
                             className='fas fa-copy fa-2x'

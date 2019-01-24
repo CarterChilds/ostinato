@@ -1,0 +1,1 @@
+DELETE FROM share_table WHERE loop_id=${loop_id};
