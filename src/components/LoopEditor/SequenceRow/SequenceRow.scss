@@ -1,0 +1,27 @@
+$colorList: rgb(45, 255, 241), rgb(45, 255, 181), rgb(44, 255, 125), rgb(121, 255, 44), rgb(225, 255, 45), rgb(241, 255, 45), rgb(255, 234, 45), rgb(255, 223, 45);
+
+.note {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    margin: 1px 3px;
+    background: rgb(235, 235, 235);
+    transition: .1s;
+    &:hover {
+        opacity: 0.2;
+    };
+}
+.selected {
+    background-color: rgb(45, 255, 241);
+}
+// .sequencer div:nth-of-type()
+
+@for $i from 1 through 8 {
+    .sequencer div:nth-of-type(8n+#{$i}) .selected {
+        background-color: nth($colorList, $i)
+    }
+}
+
+#active-row {
+    opacity: 0.5;
+}

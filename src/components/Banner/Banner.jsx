@@ -11,8 +11,8 @@ export default function Banner(props) {
                     <h1>Social Beatmaker</h1>
                 </div>
                 <div className="button-wrapper">
-                    <svg height='60' width='320' xmlns='http://www.w3.org/2000/svg'>
-                        <rect className='shape' height='60' width='220' />
+                    <svg height='60' width='212' xmlns='http://www.w3.org/2000/svg'>
+                        <rect className='shape' height='60' width='212' />
                     </svg>
                     <div className="button-text">EXPLORE</div>
                 </div>

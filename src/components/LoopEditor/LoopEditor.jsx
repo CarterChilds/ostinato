@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './LoopEditor.scss'
 import Tone from 'tone'
 import Swal from 'sweetalert2'
+import io from 'socket.io-client'
 import axios from 'axios';
 import { connect } from 'react-redux'
 import { getUser } from '../../ducks/reducer'
@@ -87,6 +88,8 @@ class LoopEditor extends Component {
         this.changeTempo = this.changeTempo.bind(this)
         this.changeVolume = this.changeVolume.bind(this)
         this.changeSound = this.changeSound.bind(this)
+        this.socket = io.connect(':5647')
+        this.socket.on('update note', data => this.toggleNote(data.rowIndex, data.noteIndex))
     }
 
     async componentDidMount() {
@@ -94,6 +97,7 @@ class LoopEditor extends Component {
             this.setState({ bufferLoaded: !this.state.bufferLoaded })
         })
         await this.componentWillUnmount()
+        this.socket.emit('join room', {room: this.props.match.params.id})
         this.setState({ activeNote: null })
         await Tone.context.suspend()
         await Tone.Transport.toggle()
@@ -215,30 +219,29 @@ class LoopEditor extends Component {
     //     }
     // }
 
-    async saveLoop() {
-        const { id } = this.props.match.params
+    async copyLoop() {
         const { title, tempo, instrument, key, rowData } = this.state
         const rows = rowData.map(row => (
             row.join('')
         ))
-        await axios.put(`/api/loop/${id}`, { title, tempo, instrument, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
+        const newID = await axios.post(`/api/copy`, { title, tempo, instrument, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
         Swal({
             customClass: 'swal-custom',
             customContainerClass: 'swal-container',
             type: 'success',
-            title: 'Loop saved',
+            title: 'Loop copied',
             text: 'Do you want to keep working on this loop?',
             showCancelButton: true,
-            cancelButtonText: 'Keep Working',
+            cancelButtonText: 'Stay here',
             confirmButtonColor: 'rgb(44, 255, 96)',
-            confirmButtonText: 'Dashboard',
+            confirmButtonText: 'Switch to copy',
             backdrop: `
             linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
             `
         }).then(result => {
             if (result.value) {
                 this.componentWillUnmount()
-                this.props.history.push('/dashboard')
+                this.props.history.push(`/loop/${newID.data.loop_id}`)
             }
         })
     }
@@ -262,7 +265,7 @@ class LoopEditor extends Component {
             if (result.value) {
                 axios.delete(`/api/loop/${id}`)
                     .catch(err => {
-                        return Swal({
+                        Swal({
                             customClass: 'swal-custom',
                             customContainerClass: 'swal-container',
                             backdrop: `
@@ -272,6 +275,7 @@ class LoopEditor extends Component {
                             text: `This feature is only available to the loop creator`,
                             type: 'error'
                         })
+                        this.props.history.push('/dashboard')
                     })
                 this.componentWillUnmount()
                 await Swal({
@@ -290,7 +294,14 @@ class LoopEditor extends Component {
     }
 
     resetLoop() {
-        this.componentDidMount()
+        this.state.noteIDs.forEach((row, rowIndex) => {
+            row.forEach((noteID, noteIndex) => {
+                if (noteID) {
+                    this.toggleNote(rowIndex, noteIndex)
+                }
+            })
+        })
+        // this.componentDidMount()
         Swal({
             customClass: 'swal-custom',
             customContainerClass: 'swal-container',
@@ -343,7 +354,7 @@ class LoopEditor extends Component {
                     type: 'warning',
                     title: 'Awkward...',
                     text: `This email does not have an account! 
-                    We'll invite to join you on Ostinato. :)`
+                    We'll send an invite to join you on Ostinato. :)`
                 })
             }
         }
@@ -391,7 +402,7 @@ class LoopEditor extends Component {
         }
     }
 
-    toggleNote(rowIndex, noteIndex) {
+    async toggleNote(rowIndex, noteIndex) {
         let newArr = this.state.rowData.slice()
         if (newArr[rowIndex][noteIndex] === 0) {
             newArr[rowIndex][noteIndex] = 1
@@ -403,6 +414,13 @@ class LoopEditor extends Component {
         this.setState({
             rowData: newArr
         })
+        // (below) Save new note to database immediately so users joining the editor view will be in sync
+        const { id } = this.props.match.params
+        const { title, tempo, instrument, key, rowData } = this.state
+        const rows = rowData.map(row => (
+            row.join('')
+        ))
+        await axios.put(`/api/loop/${id}`, { title, tempo, instrument, key, row_1: rows[0], row_2: rows[1], row_3: rows[2], row_4: rows[3], row_5: rows[4], row_6: rows[5], row_7: rows[6], row_8: rows[7] })
     }
 
     playPause() {
@@ -499,15 +517,23 @@ class LoopEditor extends Component {
         })
     }
 
-    audioVisualizer() {
-        const analyser = new Tone.Waveform(32)
-        // Tone.Master.connect(analyser)
-        analyser.connect(Tone.Master)
-        console.log(analyser.getValue())
+    // TODO: AUDIO VISUALIZER! I haven't nailed down waveform data yet - it is giving me an array of 0s.
+    // audioVisualizer() {
+    //     const analyser = new Tone.Waveform(32)
+    //     Tone.Master.connect(analyser)
+    //     // analyser.connect(Tone.Master)
+    //     console.log(analyser.getValue())
+    // }
+
+    sendNote = (rowIndex, noteIndex) => {
+        this.socket.emit(`change note`, {
+            room: this.props.match.params.id,
+            rowIndex: rowIndex,
+            noteIndex: noteIndex
+        })
     }
 
     render() {
-        this.audioVisualizer()
         let progressStyle = {
             width: `${Tone.Transport.progress * 107}vw`,
             backgroundImage: `linear-gradient(to right, rgba(226, 255, 51, .2), rgba(45, 255, 241, .2)`,
@@ -529,8 +555,8 @@ class LoopEditor extends Component {
                     />
                     <div>
                         <i
-                            className='fas fa-save fa-2x'
-                            onClick={() => this.saveLoop()}
+                            className='fas fa-copy fa-2x'
+                            onClick={() => this.copyLoop()}
                         />
                         <i
                             className='fas fa-trash fa-2x'
@@ -555,6 +581,7 @@ class LoopEditor extends Component {
                             note={this.state.scale[index]}
                             changeFn={this.toggleNote}
                             activeNote={this.state.activeNote}
+                            sendFn={this.sendNote}
                         />
                     ))}
                 </div>

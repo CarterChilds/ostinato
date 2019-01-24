@@ -1,5 +1,5 @@
 import React from 'react'
-import './SequenceRow.css'
+import './SequenceRow.scss'
 
 export default function SequenceRow(props) {
     return (
@@ -9,7 +9,9 @@ export default function SequenceRow(props) {
                     className={note === 1 ? 'selected note' : 'note'}
                     id={(props.activeNote) === noteIndex ? 'active-row' : ''}
                     key={noteIndex}
-                    onClick={() => props.changeFn(props.rowIndex, noteIndex)}
+                    onClick={() => {
+                        props.sendFn(props.rowIndex, noteIndex)
+                        }}
                 />
             ))}
         </div>

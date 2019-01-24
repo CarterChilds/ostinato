@@ -34,11 +34,25 @@ module.exports = {
                 res.status(500).send(err.message)
             })
     },
+    copyLoop: (req, res) => {
+        console.log('hit')
+        const db = req.app.get('db')
+        const { id: creator_id } = req.session.user
+        let { title, tempo, instrument, key, row_1, row_2, row_3, row_4, row_5, row_6, row_7, row_8 } = req.body
+        title = `${title} copy`
+        db.copy_loop({ creator_id, title, tempo, instrument, key, row_1, row_2, row_3, row_4, row_5, row_6, row_7, row_8 })
+            .then(result => {
+                res.status(200).send(result[0])
+            })
+            .catch(err => {
+                res.status(500).send(err.message)
+            })
+    },
     shareLoop: async (req, res) => {
         const db = req.app.get('db')
         const { id: loop_id } = req.params
         const { email } = req.body
-        const { username:name } = req.session.user
+        const { username: name } = req.session.user
         const sharedUser = await db.find_account({ email })
         if (sharedUser[0]) {
             await db.share_loop({ user_id: sharedUser[0].user_id, loop_id })
