@@ -3,18 +3,17 @@
 .banner {
     background-image: linear-gradient($gradientGreen, $gradientBlue);
     height: calc(100vh - 60px);
-    min-height: 400px;
+    min-height: 320px;
     display: flex;
     position: relative;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    // background-color: rgba(0,0,0,.5);
     width: 100vw;
     margin-top: -20px;
     font-family: $primaryFont;
     .banner-content {
-        width: 50%;
+        width: 60%;
         padding: 50px 0 250px 0;
         text-align: center;
     };
@@ -24,15 +23,6 @@
         h1 {
             color: #333;
         };
-    }
-    .main-overlay {
-        background: rgba(45, 255, 241, .8);
-        padding: 30px;
-        position: relative;
-        bottom: 270px;
-        h2 {
-            font-family: 'Didact Gothic', sans-serif;
-        }
     }
 }
 
@@ -85,4 +75,16 @@
     cursor: pointer;
     -webkit-animation: 0.5s draw linear forwards;
     animation: 0.5s draw linear forwards;
+}
+
+@media (max-width: 420px) {
+    .banner {
+        .banner-content {
+            width: 90%;
+        }
+        #logo-container {
+            width: 100%;
+            text-align: center;
+        }
+    }
 }

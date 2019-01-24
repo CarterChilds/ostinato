@@ -19,3 +19,12 @@ div > h2 {
     font-family: $primaryFont;
     font-size: 2em;
 }
+
+@media (max-width: 568px) {
+    div > h2 {
+        text-align: center;
+    }
+    .dashboard {
+        justify-content: center;
+    }
+}

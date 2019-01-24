@@ -86,7 +86,7 @@ class Header extends Component {
                     onClick={() => this.setState({ showSideMenu: false })}
                     to='/'
                 >
-                    <div 
+                    <div
                         className="logo"
                         id={this.state.showLogo ? '' : 'hide-logo'}
                     >
@@ -106,7 +106,7 @@ class Header extends Component {
                         >
                             <h3>
                                 Register
-                        </h3>
+                            </h3>
                         </div>
                         <div
                             className="header-button"
@@ -117,8 +117,14 @@ class Header extends Component {
                         >
                             <h3>
                                 Login
-                        </h3>
+                            </h3>
                         </div>
+                        <i
+                            className='fas fa-bars fa-2x'
+                            onClick={() => {
+                                this.toggle('showLogin')
+                            }}
+                        />
                     </div>
                 ) : (
                         <div className='nav'>
@@ -130,8 +136,14 @@ class Header extends Component {
                             >
                                 <h3>
                                     Menu
-                            </h3>
+                                </h3>
                             </div>
+                            <i
+                                className='fas fa-bars fa-2x'
+                                onClick={() => {
+                                    this.toggle('showSideMenu')
+                                }}
+                            />
                         </div>
                     )}
 

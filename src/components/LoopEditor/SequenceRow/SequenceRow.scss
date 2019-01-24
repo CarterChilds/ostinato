@@ -21,3 +21,11 @@
 #active-row {
     opacity: 0.5;
 }
+
+@media (max-width: 850px) {
+    .note {
+        width: 4vw;
+        height: 25px;
+    }
+
+}

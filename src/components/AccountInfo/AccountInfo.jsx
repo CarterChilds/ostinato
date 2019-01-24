@@ -172,7 +172,7 @@ class AccountInfo extends Component {
                     />
                 </div>
                 <div>
-                    <p>Password: </p>
+                    <p>Password:<span>*</span> </p>
                     <input
                         type="password"
                         value={this.state.currentPass}
