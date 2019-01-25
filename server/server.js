@@ -4,6 +4,7 @@ const massive = require('massive')
 const session = require('express-session')
 const socket = require('socket.io')
 const { SERVER_PORT, CONNECTION_STRING, SECRET, S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env
+const path = require('path')
 
 const app = express()
 
@@ -50,6 +51,7 @@ app.use(session({
     saveUninitialized: false,
     resave: false
 }))
+app.use(express.static(`${__dirname}/../build`));
 
 // Endpoints for Authentication
 app.post('/auth/register', authCtrl.register)
@@ -95,4 +97,8 @@ io.on('connection', socket => {
         // console.log('note changed ', data.room)
         io.to(data.room).emit('update note', data)
     })
+})
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build/index.html'))
 })
