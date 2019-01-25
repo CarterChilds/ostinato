@@ -145,6 +145,7 @@
     .loop-title-bar {
         position: relative;
         right: 20px;
+        justify-content: space-around;
         input {
             font-size: 16px;
             font-family: $primaryFont;

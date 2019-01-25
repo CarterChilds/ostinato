@@ -16,7 +16,7 @@ function SideMenu(props) {
                 {/* <img src={props.profilePic} alt='' /> */}
             </div>
             <Link to='/' onClick={() => props.toggleFn('showSideMenu')}>
-                <h3>Browse Loops</h3>
+                <h3>Home</h3>
             </Link>
             <Link to='/dashboard' onClick={() => props.toggleFn('showSideMenu')}>
                 <h3>My Dashboard</h3>
