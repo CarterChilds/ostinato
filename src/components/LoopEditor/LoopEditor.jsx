@@ -88,7 +88,7 @@ class LoopEditor extends Component {
         this.changeTempo = this.changeTempo.bind(this)
         this.changeVolume = this.changeVolume.bind(this)
         this.changeSound = this.changeSound.bind(this)
-        this.socket = io.connect(':5647', { secure: true })
+        this.socket = io.connect({ secure: true })
         this.socket.on('update note', data => this.toggleNote(data.rowIndex, data.noteIndex))
     }
 
