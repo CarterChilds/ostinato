@@ -14,7 +14,10 @@ export default function Banner(props) {
                     <svg height='60' width='212' xmlns='http://www.w3.org/2000/svg'>
                         <rect className='shape' height='60' width='212' />
                     </svg>
-                    <div className="button-text">EXPLORE</div>
+                    <div
+                        className="button-text"
+                        onClick={() => props.scrollFn()}
+                    >EXPLORE</div>
                 </div>
             </div>
         </div>

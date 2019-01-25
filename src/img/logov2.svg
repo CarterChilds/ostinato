@@ -8,7 +8,7 @@
                                     type='rotate'
                                     from='0 63 113'
                                     to= '360 63 113'
-                                    dur='17s'
+                                    dur='12s'
                                     repeatCount='indefinite'/>
             <circle cx="62.975" cy="112.859" r="56.788" style="fill:#fff;fill-opacity:0;stroke:#000;stroke-width:11.25px;"/>
             <path d="M81.745,63.578l-0.436,1.146" style="fill:none;stroke:#000;stroke-width:11.25px;stroke-linecap:square;stroke-linejoin:miter;"/>
@@ -24,7 +24,7 @@
                                     type='rotate'
                                     from='0 653 113'
                                     to= '360 653 113'
-                                    dur='17s'
+                                    dur='12s'
                                     repeatCount='indefinite'/>
             <circle cx="653.06" cy="112.859" r="56.788" style="fill:#fff;fill-opacity:0;stroke:#000;stroke-width:11.25px;"/>
             <path d="M638.228,62.251l0.345,1.177" style="fill:none;stroke:#000;stroke-width:11.25px;stroke-linecap:square;stroke-linejoin:miter;"/>
@@ -48,7 +48,7 @@
                                     type='rotate'
                                     from='360 289 17'
                                     to= '0 289 17'
-                                    dur='17s'
+                                    dur='12s'
                                     repeatCount='indefinite'/>
             <path d="M279.627,30.524l18.664,-26.551" style="fill:none;stroke:#000;stroke-width:2.81px;stroke-linecap:square;stroke-linejoin:miter;"/>
             <path d="M272.796,15.802l32.326,2.893" style="fill:none;stroke:#000;stroke-width:2.81px;stroke-linecap:square;stroke-linejoin:miter;"/>

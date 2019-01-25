@@ -1,0 +1,74 @@
+@import '../sassVars.scss';
+
+.features { 
+    width: 100vw;
+    text-align: center;
+    font-family: $primaryFont;
+    position: relative;
+    div {
+        display: flex;
+        // align-items: center;
+    }
+    h1 {
+        align-self: center;
+        font-family: $secondaryFont;
+        font-size: 2rem;
+        padding: 50px;
+        display: inline-block;
+        background-color: rgb(45, 255, 181);
+        left: 80px;
+        bottom: 100px;
+    }
+    #share {
+        width: 180px;
+    }
+    h3 {
+        align-self: center;
+        justify-content: center;
+        background-color: rgba(255, 254, 250, .8);
+        display: inline-block;
+        padding: 10px;
+        margin: 50px;
+        width: 30vw;
+        border: 2px solid black;
+    }
+}
+.right {
+    position: relative;
+    left: calc(100vw - 30vw - 50px - 230px);
+}
+.join-button > h3:hover {
+    border: 2px solid $blueHighlight;
+    color: $blueHighlight;
+    cursor: pointer;
+    transition: .2s;
+}
+
+@media (max-width: 420px) {
+    .features {
+        div {
+            display: block;
+        };
+        h1 {
+            // margin-bottom: 20px;
+        }
+        .right {
+            position: relative;
+            top: 185px;
+            left: 0;
+            .h3 {
+                position: relative;
+                bottom: 200px;
+            }
+        }
+        h3 {
+            width: 100vw;
+            margin: 0;
+        };
+        .join-button {
+            display: block;
+            align-self: center;
+            justify-self: center;
+        }
+    }
+}
