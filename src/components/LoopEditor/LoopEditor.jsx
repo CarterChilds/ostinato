@@ -469,7 +469,13 @@ class LoopEditor extends Component {
     }
 
     async changeSound(sampleSelection) {
-        Tone.context.suspend()
+        if (Tone.context.state === 'running') {
+            Tone.context.suspend()
+            Tone.Transport.toggle()
+            this.setState({
+                activeNote: null
+            })
+        }
         let sampleToLoad = null
         switch (sampleSelection) {
             case 'acousticGuitar':
