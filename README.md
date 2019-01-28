@@ -4,7 +4,7 @@ Ostinato is a simple music creation tool. It is a tool for creating musical loop
 
 ## Live Version
 
-A live version of this project can be found [here](https://ostinatoloop.com)
+A live version of this project can be found [here](https://ostinatoloop.com).
 
 ## Built With
 
