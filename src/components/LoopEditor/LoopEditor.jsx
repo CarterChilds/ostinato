@@ -133,11 +133,11 @@ class LoopEditor extends Component {
             const rowData = rowArray.map(row => {
                 return row.map(note => Number(note))
             })
-            this.calculateScale(key)
-            this.changeSound(this.state.instrument)
             this.setState({
                 rowData, title, key, tempo, instrument
             })
+            this.calculateScale(key)
+            this.changeSound(this.state.instrument)
         } catch (e) {
             console.log(e)
             await Swal({
