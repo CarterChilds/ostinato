@@ -8,7 +8,7 @@ export default function TempoSelector(props) {
                 type='range'
                 id='tempo-slider'
                 name='tempo'
-                min='24'
+                min='12'
                 max='300'
                 value={props.tempo}
                 step='4'
