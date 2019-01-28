@@ -13,13 +13,14 @@ export default class Home extends Component {
         this.scroll = this.scroll.bind(this)
     }
 
-    scroll() {
-        jump('#features-scroll-target', {duration: 1000})
+    scroll(spot) {
+        jump(`#${spot}`, {duration: 1000})
     }
 
     render() {
         return (
             <div>
+                <div id='scroll-top' />
                 <Banner
                     scrollFn={this.scroll}
                 />
@@ -27,6 +28,7 @@ export default class Home extends Component {
                 <Features
                     ref={ref => this.myRef=ref}
                     joinFn='k'
+                    scrollFn={this.scroll}
                 />
             </div>
         )

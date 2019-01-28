@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import './SideMenu.scss'
 
@@ -10,7 +10,9 @@ function SideMenu(props) {
     return (
         <div className={props.display ? 'side-menu slide-in' : 'side-menu'}>
             <span>{props.username}</span>
-            <div className='profile-pic'
+            <div 
+                onClick={() => props.history.push('/account')}
+                className='profile-pic'
                 style={profilePic}
             >
                 {/* <img src={props.profilePic} alt='' /> */}
@@ -47,4 +49,4 @@ function mapStateToProps(store) {
     return { username, profilePic }
 }
 
-export default connect(mapStateToProps)(SideMenu)
+export default connect(mapStateToProps)(withRouter(SideMenu))
