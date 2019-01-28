@@ -186,21 +186,7 @@ class LoopEditor extends Component {
     async componentWillUnmount() {
         Tone.Transport.clear(this.state.repeatId)
         Tone.Transport.stop()
-        await this.state.noteIDs.forEach((row, rowIndex) => {
-            row.forEach((note, noteIndex) => {
-                if (note) {
-                    this.removeNote(rowIndex, noteIndex)
-                }
-            })
-        })
-        this.setState({
-            repeatId: null,
-            rowData: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-            title: 'New Loop',
-            tempo: 120,
-            key: 'c',
-            scale: ['C4', 'B3', 'A3', 'G3', 'F3', 'E3', 'D3', 'C3']
-        })
+        Tone.Transport.cancel()
     }
 
     initializeSoundEngine() {
@@ -222,7 +208,6 @@ class LoopEditor extends Component {
         Tone.Transport.start()
     }
 
-    // KEY CHANGE FUNCTIONALITY!!!!! This is not finished, but I have started the logic. ***********************************
     calculateScale(newKeySelection) {
         this.setState({
             key: newKeySelection
