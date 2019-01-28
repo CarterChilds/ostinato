@@ -98,7 +98,7 @@ class LoopEditor extends Component {
         Tone.Buffer.on('load', () => {
             this.setState({ bufferLoaded: !this.state.bufferLoaded })
         })
-        // await this.componentWillUnmount()
+        await this.componentWillUnmount()
         this.socket.emit('join room', { room: this.props.match.params.id })
         this.setState({ activeNote: null })
         await Tone.context.suspend()
@@ -134,10 +134,10 @@ class LoopEditor extends Component {
                 return row.map(note => Number(note))
             })
             this.calculateScale(key)
+            this.changeSound(this.state.instrument)
             this.setState({
                 rowData, title, key, tempo, instrument
             })
-            this.changeSound(this.state.instrument)
         } catch (e) {
             console.log(e)
             await Swal({
@@ -463,6 +463,11 @@ class LoopEditor extends Component {
 
     removeNote(rowIndex, noteIndex) {
         Tone.Transport.clear(this.state.noteIDs[rowIndex][noteIndex])
+        let newNoteIDs = [...this.state.noteIDs]
+        newNoteIDs[rowIndex][noteIndex] = null
+        this.setState({
+            noteIDs: newNoteIDs
+        })
     }
 
     handleChange(prop, evt) {
