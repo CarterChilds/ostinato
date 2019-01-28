@@ -183,11 +183,10 @@ class LoopEditor extends Component {
         }
     }
 
-    componentWillUnmount() {
+    async componentWillUnmount() {
         Tone.Transport.clear(this.state.repeatId)
         Tone.Transport.stop()
         Tone.Transport.cancel()
-
     }
 
     initializeSoundEngine() {
