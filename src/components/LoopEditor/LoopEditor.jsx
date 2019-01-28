@@ -98,7 +98,7 @@ class LoopEditor extends Component {
         Tone.Buffer.on('load', () => {
             this.setState({ bufferLoaded: !this.state.bufferLoaded })
         })
-        await this.componentWillUnmount()
+        // await this.componentWillUnmount()
         this.socket.emit('join room', { room: this.props.match.params.id })
         this.setState({ activeNote: null })
         await Tone.context.suspend()
@@ -139,7 +139,19 @@ class LoopEditor extends Component {
             })
             this.changeSound(this.state.instrument)
         } catch (e) {
-            console.log('Loop id does not exist')
+            console.log(e)
+            await Swal({
+                customClass: 'swal-custom',
+                customContainerClass: 'swal-container',
+                type: 'error',
+                title: 'Does Not Exist',
+                text: 'This is not a valid loop',
+                confirmButtonColor: 'rgb(44, 255, 96)',
+                backdrop: `
+                linear-gradient(69deg, rgba(45, 255, 241, .3), rgba(225, 255, 45, .3))
+                `
+            })
+            this.props.history.push('/dashboard')
         }
         this.initializeSoundEngine()
         if (this.state.instrument === 'synth') {

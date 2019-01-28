@@ -16,7 +16,7 @@ export default function Banner(props) {
                     </svg>
                     <div
                         className="button-text"
-                        onClick={() => props.scrollFn()}
+                        onClick={() => props.scrollFn('features-scroll-target')}
                     >EXPLORE</div>
                 </div>
             </div>
