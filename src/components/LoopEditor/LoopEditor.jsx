@@ -21,6 +21,7 @@ import rhodes from '../../samples/c3/rhodes.wav'
 import spaceKalimba from '../../samples/c3/spaceKalimba.wav'
 import tinnyPiano from '../../samples/c3/tinnyPiano.wav'
 import violins from '../../samples/c3/violins.wav'
+import KeySelector from './KeySelector/KeySelector';
 
 // SETUP FOR TONEJS ****************************************
 
@@ -88,6 +89,7 @@ class LoopEditor extends Component {
         this.changeTempo = this.changeTempo.bind(this)
         this.changeVolume = this.changeVolume.bind(this)
         this.changeSound = this.changeSound.bind(this)
+        this.calculateScale = this.calculateScale.bind(this)
         this.socket = io.connect({ secure: true })
         this.socket.on('update note', data => this.toggleNote(data.rowIndex, data.noteIndex))
     }
@@ -131,6 +133,7 @@ class LoopEditor extends Component {
             const rowData = rowArray.map(row => {
                 return row.map(note => Number(note))
             })
+            this.calculateScale(key)
             this.setState({
                 rowData, title, key, tempo, instrument
             })
@@ -208,16 +211,60 @@ class LoopEditor extends Component {
     }
 
     // KEY CHANGE FUNCTIONALITY!!!!! This is not finished, but I have started the logic. ***********************************
-    // calculateScale() {
-    //     const sharpScaleDegrees = ['a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
-    //     const flatScaleDegrees = ['a', 'bb', 'b', 'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab']
-    //     let newScale = []
-    //     const {key} = this.state
-    //     keyArr = key.split('')
-    //     if (keyArr.length === 1 && keyArr[0].toLowerCase() !== 'f') {
-
-    //     }
-    // }
+    calculateScale(newKeySelection) {
+        this.setState({
+            key: newKeySelection
+        })
+        const sharpScaleDegrees = ['a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
+        const flatScaleDegrees = ['a', 'bb', 'b', 'c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab']
+        let keyRoot = ''
+        let rootDegree = null
+        let keyDegrees = []
+        let updatedDegrees = []
+        let newScale = []
+        const { key } = this.state
+        const keyArr = key.split('')
+        // find root of key
+        if (keyArr.includes('m')) {
+            keyRoot = keyArr.slice(0, [keyArr.length - 1]).join('')
+        } else {
+            keyRoot = keyArr.join('')
+        }
+        // convert root of key into number
+        if (keyRoot.length === 1 || keyRoot[1] === '#') {
+            rootDegree = sharpScaleDegrees.indexOf(keyRoot)
+        } else {
+            rootDegree = flatScaleDegrees.indexOf(keyRoot)
+        }
+        // calculate arr of scale degrees in minor or Major
+        if (keyArr.includes('m')) {
+            keyDegrees = [12, 10, 8, 7, 5, 3, 2, 0]
+            updatedDegrees = keyDegrees.map(degree => degree = (degree + rootDegree) % 12)
+        } else {
+            keyDegrees = [12, 11, 9, 7, 5, 4, 2, 0]
+            updatedDegrees = keyDegrees.map(degree => degree = (degree + rootDegree) % 12)
+        }
+        // convert scale degrees back into note names
+        updatedDegrees.forEach(degree => {
+            newScale.push(sharpScaleDegrees[degree])
+        })
+        let octaveChange = null
+        if (newScale.includes('c')) {
+            octaveChange = newScale.indexOf('c')
+        } else {
+            octaveChange = newScale.indexOf('c#')
+        }
+        newScale.forEach((note, index) => {
+            if (index > octaveChange) {
+                newScale[index] = note + '3'
+            } else if (index <= octaveChange) {
+                newScale[index] = note + '4'
+            }
+        })
+        this.setState({
+            scale: newScale
+        })
+    }
 
     async saveLoop() {
         const { id } = this.props.match.params
@@ -650,6 +697,9 @@ class LoopEditor extends Component {
                         <TempoSelector
                             tempo={this.state.tempo}
                             changeFn={this.changeTempo}
+                        />
+                        <KeySelector
+                            loadFn={this.calculateScale}
                         />
                     </div>
                 </div>
