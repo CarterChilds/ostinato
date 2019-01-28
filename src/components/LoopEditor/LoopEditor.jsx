@@ -90,7 +90,7 @@ class LoopEditor extends Component {
         this.changeVolume = this.changeVolume.bind(this)
         this.changeSound = this.changeSound.bind(this)
         this.calculateScale = this.calculateScale.bind(this)
-        this.socket = io.connect('http://157.230.168.187:5647', { secure: true })
+        this.socket = io.connect({ secure: true })
         this.socket.on('update note', data => this.toggleNote(data.rowIndex, data.noteIndex))
     }
 
