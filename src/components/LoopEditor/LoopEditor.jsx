@@ -90,7 +90,7 @@ class LoopEditor extends Component {
         this.changeVolume = this.changeVolume.bind(this)
         this.changeSound = this.changeSound.bind(this)
         this.calculateScale = this.calculateScale.bind(this)
-        this.socket = io.connect({ secure: true })
+        this.socket = io.connect('http://157.230.168.187:5647', { secure: true })
         this.socket.on('update note', data => this.toggleNote(data.rowIndex, data.noteIndex))
     }
 
@@ -183,10 +183,10 @@ class LoopEditor extends Component {
         }
     }
 
-    componentWillUnmount() {
+    async componentWillUnmount() {
         Tone.Transport.clear(this.state.repeatId)
         Tone.Transport.stop()
-        this.state.noteIDs.forEach((row, rowIndex) => {
+        await this.state.noteIDs.forEach((row, rowIndex) => {
             row.forEach((note, noteIndex) => {
                 if (note) {
                     this.removeNote(rowIndex, noteIndex)
